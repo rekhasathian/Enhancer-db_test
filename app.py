@@ -88,6 +88,13 @@ if page == "📊 Browse Data":
     Browse through the data using the tabs
     """)
 
+    tab1, tab2 = st.tabs(["Candidate Variants", "Enhancers in Human Genome"])
+    with tab1:
+        st.header("Candidate Variants")
+
+    with tab2:
+        st.header("Enhancers in Human Genome")
+        
 else:  # About page
     st.title("About DNABERT-Enhancer portal")
     st.markdown("""
