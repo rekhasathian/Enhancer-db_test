@@ -73,23 +73,24 @@ with st.sidebar:
     with st.sidebar:
         page = option_menu(
             "Navigation",
-            ["ℹ️ About", "📊 Browse Data"],
-            icons=["info-circle", "bar-chart"],
-            menu_icon="cast",
+            ["ℹ️ About", "📊 Browse Data"],  # emojis already in text
+            menu_icon=None,  # no extra icon needed
             default_index=0,
             styles={
-                "container": {"padding": "0!important", "background-color": "#f8f9fa", "font-size": "14px"},
-                "icon": {"color": "#0d6efd", "font-size": "13px"},  # icon size
+                "container": {
+                    "padding": "0!important",
+                    "background-color": "#f8f9fa",
+                },
                 "nav-link": {
-                    "font-size": "13px",  # <-- smaller sidebar text
+                    "font-size": "13px",     # <-- smaller font size here
                     "text-align": "left",
-                    "margin": "2px 0",
+                    "margin": "4px 0",
                     "padding": "6px 10px",
-                    "--hover-color": "#e0f2fe"
+                    "--hover-color": "#e0f2fe",
                 },
                 "nav-link-selected": {
-                    "background-color": "#bae6fd",  # highlight color
-                    "font-weight": "600"
+                    "background-color": "#bae6fd",
+                    "font-weight": "600",
                 },
             }
         )
