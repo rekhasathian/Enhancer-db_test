@@ -77,7 +77,6 @@ with st.sidebar:
             default_index=0,
             styles={
                 "container": {"padding": "0!important", "background-color": "#f8f9fa"},
-                "icon": {"color": "#0d6efd", "font-size": "14px"},  # icon size
                 "nav-link": {
                     "font-size": "14px",  # <-- smaller sidebar text
                     "text-align": "left",
