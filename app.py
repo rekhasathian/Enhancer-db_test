@@ -71,27 +71,13 @@ with st.sidebar:
     st.divider()
 
     with st.sidebar:
-        page = option_menu(
-            "Navigation",
+        st.markdown("### Navigation")
+        page = st.radio(
+            "",
             ["ℹ️ About", "📊 Browse Data"],
-            menu_icon=None,
-            default_index=0,
-            styles={
-                "container": {"padding": "0!important", "background-color": "#f8f9fa", "font-size": "14px"},
-                "nav-link": {
-                    "font-size": "13px",
-                    "text-align": "left",
-                    "margin": "4px 0",
-                    "padding": "6px 10px",
-                    "--hover-color": "#e0f2fe",
-                    "--selected-icon": "none"  # <-- removes the triangle/arrow
-                },
-                "nav-link-selected": {
-                    "background-color": "#bae6fd",
-                    "font-weight": "600",
-                    "--selected-icon": "none"  # remove arrow for selected item
-                },
-            }
+            index=0,
+            label_visibility="collapsed",
+            horizontal=False
         )
   
 # Main content
