@@ -99,7 +99,7 @@ else:  # About page
     st.markdown("<br>", unsafe_allow_html=True)
     
     # Load the image
-    img = Image.open("Enhancer.png")
+    img = Image.open("./Figures/Enhancer.png")
 
     # Save to a buffer to preserve quality
     buf = io.BytesIO()
@@ -137,7 +137,7 @@ else:  # About page
         unsafe_allow_html=True
         )
 
-    img2 = Image.open("Graphical_abstract.png")
+    img2 = Image.open("./Figures/Graphical_abstract.png")
     # Save to buffer to preserve quality
     buf = io.BytesIO()
     img2.save(buf, format="PNG", optimize=True)
