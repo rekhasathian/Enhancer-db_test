@@ -77,6 +77,21 @@ with st.sidebar:
             icons=["info-circle", "bar-chart"],
             menu_icon="cast",
             default_index=0,
+            styles={
+                "container": {"padding": "0!important", "background-color": "#f8f9fa"},
+                "icon": {"color": "#0d6efd", "font-size": "14px"},  # icon size
+                "nav-link": {
+                    "font-size": "14px",  # <-- smaller sidebar text
+                    "text-align": "left",
+                    "margin": "2px 0",
+                    "padding": "6px 10px",
+                    "--hover-color": "#e0f2fe"
+                },
+                "nav-link-selected": {
+                    "background-color": "#bae6fd",  # highlight color
+                    "font-weight": "600"
+                },
+            }
         )
   
 # Main content
