@@ -74,7 +74,6 @@ with st.sidebar:
         page = option_menu(
             "Navigation",
             ["ℹ️ About", "📊 Browse Data"],
-            menu_icon="cast",
             default_index=0,
             styles={
                 "container": {"padding": "0!important", "background-color": "#f8f9fa"},
