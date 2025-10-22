@@ -71,13 +71,13 @@ with st.sidebar:
     st.divider()
     
     with st.sidebar:
-    page = option_menu(
-        "Navigation",
-        ["ℹ️ About", "📊 Browse Data"],
-        icons=["info-circle", "bar-chart"],
-        menu_icon="cast",
-        default_index=0,
-    )
+        page = option_menu(
+            "Navigation",
+            ["ℹ️ About", "📊 Browse Data"],
+            icons=["info-circle", "bar-chart"],
+            menu_icon="cast",
+            default_index=0,
+        )
   
 # Main content
 if page == "📊 Browse Data":
