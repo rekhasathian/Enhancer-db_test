@@ -73,26 +73,23 @@ with st.sidebar:
     with st.sidebar:
         page = option_menu(
             "Navigation",
-            ["ℹ️ About", "📊 Browse Data"],  # emojis already in text
-            menu_icon=None,  # no extra icon needed
+            ["ℹ️ About", "📊 Browse Data"],
+            menu_icon=None,
             default_index=0,
             styles={
-                "container": {
-                    "padding": "0!important",
-                    "background-color": "#f8f9fa",
-                },
+                "container": {"padding": "0!important", "background-color": "#f8f9fa", "font-size": "14px"},
                 "nav-link": {
-                    "font-size": "13px",     # <-- smaller font size here
+                    "font-size": "13px",
                     "text-align": "left",
                     "margin": "4px 0",
                     "padding": "6px 10px",
                     "--hover-color": "#e0f2fe",
-                     "--selected-icon": "none"
+                    "--selected-icon": "none"  # <-- removes the triangle/arrow
                 },
                 "nav-link-selected": {
                     "background-color": "#bae6fd",
                     "font-weight": "600",
-                    "--selected-icon": "none"
+                    "--selected-icon": "none"  # remove arrow for selected item
                 },
             }
         )
