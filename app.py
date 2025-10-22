@@ -69,6 +69,20 @@ with st.sidebar:
     st.markdown("## 🧬 DNABERT-Enhancer Portal")
     st.markdown("**An interactive platform for exploration of predictions by DNABERT-Enhancer-350 model**")
     st.divider()
+
+    # Remove bullet styling
+    st.markdown("""
+    <style>
+    ul.nav.nav-pills {
+        list-style-type: none !important;
+        padding-left: 0 !important;
+    }
+    ul.nav.nav-pills li a {
+        list-style: none !important;
+        text-decoration: none !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
     
     with st.sidebar:
         page = option_menu(
