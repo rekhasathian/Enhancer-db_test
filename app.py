@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_option_menu import option_menu
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
@@ -69,10 +70,13 @@ with st.sidebar:
     st.markdown("**An interactive platform for exploration of predictions by DNABERT-Enhancer-350 model**")
     st.divider()
     
-    page = st.radio(
+    with st.sidebar:
+    page = option_menu(
         "Navigation",
-        [ "ℹ️ About", "📊 Browse Data"],
-        label_visibility="collapsed"
+        ["ℹ️ About", "📊 Browse Data"],
+        icons=["info-circle", "bar-chart"],
+        menu_icon="cast",
+        default_index=0,
     )
   
 # Main content
