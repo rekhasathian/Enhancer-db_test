@@ -71,25 +71,28 @@ with st.sidebar:
     st.divider()
     
     with st.sidebar:
-        page = option_menu(
-            "Navigation",
-            ["ℹ️ About", "📊 Browse Data"],
-            default_index=0,
-            styles={
-                "container": {"padding": "0!important", "background-color": "#f8f9fa"},
-                "nav-link": {
-                    "font-size": "14px",  # <-- smaller sidebar text
-                    "text-align": "left",
-                    "margin": "2px 0",
-                    "padding": "6px 10px",
-                    "--hover-color": "#e0f2fe"
-                },
-                "nav-link-selected": {
-                    "background-color": "#bae6fd",  # highlight color
-                    "font-weight": "600"
-                },
-            }
-        )
+    page = option_menu(
+        "Navigation",
+        ["ℹ️ About", "📊 Browse Data"],
+        icons=["info-circle", "bar-chart"],
+        menu_icon="cast",
+        default_index=0,
+        styles={
+            "container": {"padding": "0!important", "background-color": "#f8f9fa", "font-size": "14px"},
+            "icon": {"color": "#0d6efd", "font-size": "13px"},  # icon size
+            "nav-link": {
+                "font-size": "13px",  # <-- smaller sidebar text
+                "text-align": "left",
+                "margin": "2px 0",
+                "padding": "6px 10px",
+                "--hover-color": "#e0f2fe"
+            },
+            "nav-link-selected": {
+                "background-color": "#bae6fd",  # highlight color
+                "font-weight": "600"
+            },
+        }
+    )
   
 # Main content
 if page == "📊 Browse Data":
