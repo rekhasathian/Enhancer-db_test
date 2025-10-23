@@ -62,8 +62,14 @@ def load_data():
         'Enhancer LOF': pd.read_csv('./data/Enhancer_LOF_updated.csv'),
         'Non-enhancer GOF': pd.read_csv('./data/Non-enhancer_GOF_updated.csv')
     }
-    return datasets
-
+    # Detailed info tables
+    detailed_datasets = {
+        'Enhancer GOF': pd.read_csv('./data/Detailed_info_enhancer_GOF.csv'),
+        'Enhancer LOF': pd.read_csv('./data/Detailed_info_enhancer_LOF.csv'),
+        'Non-enhancer GOF': pd.read_csv('./data/Detailed_info_non-enhancer_GOF.csv')
+    }
+    return datasets, detailed_datasets
+    
 # Sidebar
 with st.sidebar:
     st.markdown("## 🧬 DNABERT-Enhancer Portal")
@@ -92,7 +98,7 @@ if page == "📊 Browse Data":
     with tab1:
         st.header("Candidate Variants predicted by DNABERT-Enhancer")
         
-        datasets = load_data()
+        datasets, detailed_datasets = load_data()
         combined_df = pd.concat(datasets.values(), ignore_index=True)
         combined_df.insert(0, "ID", [f"cv{i+1:06d}" for i in range(len(combined_df))])
 
@@ -257,7 +263,48 @@ if page == "📊 Browse Data":
                 file_name="filtered_candidate_variants.csv",
                 mime="text/csv"
             )
-            
+
+            def make_clickable(val):
+                return f'<a href="?variant_id={val}" target="_self">{val}</a>'
+
+            # --- Detect clicked variant from query params ---
+            query_params = st.query_params
+            if "variant_id" in query_params:
+                var_id = query_params["variant_id"][0]
+                st.markdown("---")
+                st.subheader(f"🔍 Variant Details: {var_id}")
+
+            # Filter selected variant from combined_df
+            selected_row = combined_df[combined_df["ID"] == var_id]
+
+            if selected_row.empty:
+                st.warning("Variant not found in main table.")
+            else:
+                variant_class = selected_row.iloc[0]["class"]
+                
+                # Fetch detailed DataFrame directly from preloaded dictionary
+                details_df = detailed_datasets.get(variant_class)
+
+                if details_df is not None:
+                    variant_data = details_df[details_df["ID"] == var_id]
+
+                    if not variant_data.empty:
+                        row = variant_data.iloc[0]
+
+                        # --- General Info ---
+                        st.markdown("### 🧬 General Information")
+                        colA, colB = st.columns(2)
+                        with colA:
+                            st.write("**Candidate Variant ID:**", row["ID"])
+                            st.write("**Genomic Element Class:**", variant_class)
+                            st.write("**Organism:**", "Human")
+                            st.write("**Genome Assembly:**", "GRCh38")
+                        with colB:
+                            st.write("**Element Coordinate:**", row.get("element_coordinates", "N/A"))
+                            st.write("**Closest Gene:**", row.get("gene", "N/A"))
+                            st.write("**Strand:**", row.get("strand", "N/A"))
+                            st.write("**Distance:**", row.get("distance", "N/A"))
+                    
     with tab2:
         st.header("Enhancers in Human Genome")
         
