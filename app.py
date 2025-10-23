@@ -120,7 +120,10 @@ if page == "📊 Browse Data":
             if "selected_assoc" not in st.session_state:
                 st.session_state.selected_assoc = "All"
             if "selected_lor" not in st.session_state:
-                st.session_state.selected_lor = (float(combined_df["LogOddRatio"].min()), float(combined_df["LogOddRatio"].max()))
+                st.session_state.selected_lor = (
+                    float(combined_df["LogOddRatio"].min()), 
+                    float(combined_df["LogOddRatio"].max())
+                )
 
             # Dropdown filters
             effect_options = ["All"] + sorted(combined_df["predicted_functional_effect"].unique().tolist())
