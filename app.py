@@ -89,7 +89,14 @@ with st.sidebar:
 # Main content
 if page == "📊 Browse Data":
     # Header
-    st.title("DNABERT-Enhancer prediction data")
+    st.markdown(
+    """
+    <h2 style="font-size:24px; font-weight:bold; color:#1f2937;">
+        DNABERT-Enhancer prediction data
+    </h2>
+    """,
+    unsafe_allow_html=True
+)
     st.markdown("""
     Browse through the data using the tabs
     """)
