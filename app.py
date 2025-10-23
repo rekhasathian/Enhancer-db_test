@@ -92,11 +92,6 @@ if page == "📊 Browse Data":
     with tab1:
         st.header("Candidate Variants predicted by DNABERT-Enhancer")
         
-        # --- Search Bar ---
-        search_query = st.text_input(
-            "🔍 Search Variants",
-            placeholder="Search by rsID, CV ID, chromosome, or keyword..."
-        )
         datasets = load_data()
         combined_df = pd.concat(datasets.values(), ignore_index=True)
         combined_df.insert(0, "ID", [f"cv{i+1:06d}" for i in range(len(combined_df))])
@@ -198,11 +193,27 @@ if page == "📊 Browse Data":
         with col2:
             st.subheader("Candidate Variant Table")
 
+            # --- Search Bar ---
+            search_query = st.text_input(
+                "🔍 Search Variants",
+                placeholder="Search by rsID, CV ID, chromosome, or keyword..."
+            )
+            
             # Define the columns to display
             display_cols = [
                 "ID", "chromosome", "dbsnp_id", "ScoreChange", "LogOddRatio",
                 "reported_clinical_association", "predicted_functional_effect", "class"
             ]
+
+            # --- Apply Search Filter ---
+            if search_query:
+                search_query = search_query.lower().strip()
+                filtered_df = filtered_df[
+                    filtered_df.astype(str).apply(
+                        lambda row: row.str.lower().str.contains(search_query, na=False)
+                    ).any(axis=1)
+                ]
+                
             # Display filtered table
             st.dataframe(
                 filtered_df[display_cols],
