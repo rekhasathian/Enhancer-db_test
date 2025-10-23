@@ -58,9 +58,9 @@ st.markdown("""
 @st.cache_data
 def load_data():
     datasets = {
-        'Enhancer GOF': pd.read_csv('./data/Enhancer_GOF_updated.csv'),
-        'Enhancer LOF': pd.read_csv('./data/Enhancer_LOF_updated.csv'),
-        'Non-enhancer GOF': pd.read_csv('./data/Non-enhancer_GOF_updated.csv')
+        'Enhancer GOF': pd.read_csv('./data/Detailed_info_enhancer_GOF.csv'),
+        'Enhancer LOF': pd.read_csv('./data/Detailed_info_enhancer_LOF.csv'),
+        'Non-enhancer GOF': pd.read_csv('./data/Detailed_info_non-enhancer_GOF_updated.csv')
     }
     return datasets
 
