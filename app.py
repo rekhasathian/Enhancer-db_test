@@ -298,9 +298,9 @@ if page == "📊 Browse Data":
                      selected_row_index = selected_indices[0]
                      # Get the ID of the selected row from the *original* displayed slice
                      selected_variant_id = display_df.iloc[selected_row_index]["ID"]
-        else:
-            st.info("No variants match the current filters.")
-            selected_variant_id = None
+            else:
+                st.info("No variants match the current filters.")
+                selected_variant_id = None
 
             # Check if any row is selected
             if selected_data and 'selection' in selected_data:
