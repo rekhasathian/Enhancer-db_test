@@ -139,8 +139,8 @@ if page == "📊 Browse Data":
                 key=f"variant_class_{st.session_state.filter_key}"
             )
 
-            st.markdown("
-            **Additional filters**")
+            st.markdown("---")
+            st.markdown("**Additional Filters**")
             
             selected_chrom = st.selectbox(
                 "Chromosome",
