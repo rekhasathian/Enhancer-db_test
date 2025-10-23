@@ -250,7 +250,7 @@ if page == "📊 Browse Data":
             def make_clickable(val):
                 return f'<a href="?variant_id={val}" target="_self">{val}</a>'
 
-            display_df = filtered_df[display_cols].copy()
+            display_df = filtered_df[display_cols].copy().head(10)
             display_df["ID"] = display_df["ID"].apply(make_clickable)
 
             st.markdown(
