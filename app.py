@@ -131,7 +131,7 @@ if page == "📊 Browse Data":
             st.markdown(
             """
             <h2 style="font-size:15px; font-weight:bold; color:#1f2937;">
-                Candidate variants predicted by DNABERT-Enhancer
+                Filter data
             </h2>
             """,
             unsafe_allow_html=True
@@ -218,7 +218,6 @@ if page == "📊 Browse Data":
             st.markdown(f"**{len(filtered_df):,} variants displayed**")
 
         with col2:
-            st.subheader("Candidate Variant Table")
 
             # --- Search Bar and Clear Button ---
             search_col, clear_col = st.columns([5, 0.6])
