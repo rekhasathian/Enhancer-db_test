@@ -304,6 +304,34 @@ if page == "📊 Browse Data":
                                 st.write("**Closest Gene:**", row.get("gene", "N/A"))
                                 st.write("**Strand:**", row.get("strand", "N/A"))
                                 st.write("**Distance:**", row.get("distance", "N/A"))
+
+                            # --- TF Details (Enhancer LOF only) ---
+                            if variant_class == "Enhancer LOF":
+                                st.markdown("### 🧫 Transcription Factor Details")
+                                tf_cols = [
+                                    "transcription_factor",
+                                    "tf_reference_probability",
+                                    "tf_alternative_probability",
+                                    "tf_ScoreChange",
+                                    "tf_LogOddRatio",
+                                ]
+                                tf_df = variant_data[tf_cols]
+                                st.dataframe(tf_df, use_container_width=True)
+
+                            # --- Probability & Effect Metrics ---
+                            st.markdown("### 📈 Probability and Effect Metrics")
+                            prob_cols = [
+                                "reference_probability",
+                                "alternative_probability",
+                                "ScoreChange",
+                                "LogOddRatio",
+                                "predicted_functional_effect",
+                            ]
+                            st.dataframe(variant_data[prob_cols], use_container_width=True)
+                        else:
+                            st.warning(f"No detailed record found for {var_id}.")
+                    else:
+                        st.warning(f"No detailed dataset found for class: {variant_class}")
                     
     with tab2:
         st.header("Enhancers in Human Genome")
