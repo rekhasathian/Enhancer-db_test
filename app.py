@@ -58,11 +58,17 @@ st.markdown("""
 @st.cache_data
 def load_data():
     datasets = {
+        'Enhancer GOF': pd.read_csv('./data/Enhancer_GOF_updated.csv'),
+        'Enhancer LOF': pd.read_csv('./data/Enhancer_LOF_updated.csv'),
+        'Non-enhancer GOF': pd.read_csv('./data/Non-enhancer_GOF_updated.csv')
+    }
+    detail_datasets = {
         'Enhancer GOF': pd.read_csv('./data/Detailed_info_enhancer_GOF.csv'),
         'Enhancer LOF': pd.read_csv('./data/Detailed_info_enhancer_LOF.csv'),
-        'Non-enhancer GOF': pd.read_csv('./data/Detailed_info_non-enhancer_GOF_updated.csv')
+        'Non-enhancer GOF': pd.read_csv('./data/Detailed_info_non-enhancer_GOF.csv')
     }
-    return datasets
+    return datasets,detail_datasets
+    
 
 # Sidebar
 with st.sidebar:
@@ -92,7 +98,7 @@ if page == "📊 Browse Data":
     with tab1:
         st.header("Candidate Variants predicted by DNABERT-Enhancer")
         
-        datasets = load_data()
+        datasets, detail_datasets = load_data()
         combined_df = pd.concat(datasets.values(), ignore_index=True)
         combined_df.insert(0, "ID", [f"cv{i+1:06d}" for i in range(len(combined_df))])
 
