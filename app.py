@@ -124,7 +124,7 @@ if page == "📊 Browse Data":
                     float(combined_df["LogOddRatio"].max())
                 )
 
-            f "filter_key" not in st.session_state:
+            if "filter_key" not in st.session_state:
                 st.session_state.filter_key = 0  # used to force widget refresh
             
             # Dropdown filters
