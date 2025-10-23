@@ -124,43 +124,66 @@ if page == "📊 Browse Data":
                     float(combined_df["LogOddRatio"].max())
                 )
 
+            f "filter_key" not in st.session_state:
+                st.session_state.filter_key = 0  # used to force widget refresh
+            
             # Dropdown filters
             effect_options = ["All"] + sorted(combined_df["predicted_functional_effect"].dropna().unique())
             class_options = ["All"] + sorted(combined_df["class"].dropna().unique())
             chrom_options = ["All"] + sorted(combined_df["chromosome"].dropna().unique())
             assoc_options = ["All"] + sorted(combined_df["reported_clinical_association"].dropna().unique())
-            
+
+            # Find indices
+            effect_index = effect_options.index(st.session_state.selected_effect) \
+                if st.session_state.selected_effect in effect_options else 0
+            class_index = class_options.index(st.session_state.selected_class) \
+                if st.session_state.selected_class in class_options else 0
+            chrom_index = chrom_options.index(st.session_state.selected_chrom) \
+                if st.session_state.selected_chrom in chrom_options else 0
+            assoc_index = assoc_options.index(st.session_state.selected_assoc) \
+                if st.session_state.selected_assoc in assoc_options else 0
             effect_index = effect_options.index(st.session_state.selected_effect) \
                 if st.session_state.selected_effect in effect_options else 0
             st.session_state.selected_effect = st.selectbox(
                 "Predicted Functional Effect", effect_options, index=effect_index, key="predicted_effect"
             )
 
-            class_index = class_options.index(st.session_state.selected_class) \
-                if st.session_state.selected_class in class_options else 0
+            # --- DROPDOWNS ---
+            st.session_state.selected_effect = st.selectbox(
+                "Predicted Functional Effect",
+                effect_options,
+                index=effect_index,
+                key=f"predicted_effect_{st.session_state.filter_key}"
+            )
+
             st.session_state.selected_class = st.selectbox(
-                "Variant Class", class_options, index=class_index, key="variant_class"
+                "Variant Class",
+                class_options,
+                index=class_index,
+                key=f"variant_class_{st.session_state.filter_key}"
             )
 
-            chrom_index = chrom_options.index(st.session_state.selected_chrom) \
-                if st.session_state.selected_chrom in chrom_options else 0
             st.session_state.selected_chrom = st.selectbox(
-                "Chromosome", chrom_options, index=chrom_index, key="chrom"
+                "Chromosome",
+                chrom_options,
+                index=chrom_index,
+                key=f"chrom_{st.session_state.filter_key}"
             )
 
-            assoc_index = assoc_options.index(st.session_state.selected_assoc) \
-                if st.session_state.selected_assoc in assoc_options else 0
             st.session_state.selected_assoc = st.selectbox(
-                "Clinical Association", assoc_options, index=assoc_index, key="assoc"
+                "Clinical Association",
+                assoc_options,
+                index=assoc_index,
+                key=f"assoc_{st.session_state.filter_key}"
             )
 
-            # LogOddRatio slider
+            # --- SLIDER ---
             min_lor, max_lor = float(combined_df["LogOddRatio"].min()), float(combined_df["LogOddRatio"].max())
             st.session_state.selected_lor = st.slider(
                 "LogOddRatio range",
                 min_lor, max_lor,
                 value=st.session_state.selected_lor,
-                key="lor_slider"
+                key=f"lor_slider_{st.session_state.filter_key}"
             )
 
             # Reset button — clears all filters
@@ -170,6 +193,7 @@ if page == "📊 Browse Data":
                 st.session_state.selected_chrom = "All"
                 st.session_state.selected_assoc = "All"
                 st.session_state.selected_lor = (float(min_lor), float(max_lor))
+                st.session_state.filter_key += 1  # force widget reinitialization
                 st.rerun()
 
 
