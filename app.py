@@ -173,26 +173,26 @@ if page == "📊 Browse Data":
                 st.rerun()
 
 
-        # --- FILTERING LOGIC ---
-        filtered_df = combined_df.copy()
+            # --- FILTERING LOGIC ---
+            filtered_df = combined_df.copy()
 
-        if st.session_state.selected_effect != "All":
-            filtered_df = filtered_df[filtered_df["predicted_functional_effect"] == st.session_state.selected_effect]
-        if st.session_state.selected_class != "All":
-            filtered_df = filtered_df[filtered_df["class"] == st.session_state.selected_class]
-        if st.session_state.selected_chrom != "All":
-            filtered_df = filtered_df[filtered_df["chromosome"] == st.session_state.selected_chrom]
-        if st.session_state.selected_assoc != "All":
-            filtered_df = filtered_df[filtered_df["reported_clinical_association"] == st.session_state.selected_assoc]
+            if st.session_state.selected_effect != "All":
+                filtered_df = filtered_df[filtered_df["predicted_functional_effect"] == st.session_state.selected_effect]
+            if st.session_state.selected_class != "All":
+                filtered_df = filtered_df[filtered_df["class"] == st.session_state.selected_class]
+            if st.session_state.selected_chrom != "All":
+                filtered_df = filtered_df[filtered_df["chromosome"] == st.session_state.selected_chrom]
+            if st.session_state.selected_assoc != "All":
+                filtered_df = filtered_df[filtered_df["reported_clinical_association"] == st.session_state.selected_assoc]
 
-        min_lor_val, max_lor_val = st.session_state.selected_lor
-        filtered_df = filtered_df[
-            (filtered_df["LogOddRatio"] >= min_lor_val) &
-            (filtered_df["LogOddRatio"] <= max_lor_val)
-        ]
+            min_lor_val, max_lor_val = st.session_state.selected_lor
+            filtered_df = filtered_df[
+                (filtered_df["LogOddRatio"] >= min_lor_val) &
+                (filtered_df["LogOddRatio"] <= max_lor_val)
+            ]
 
             
-        st.markdown(f"**{len(filtered_df):,} variants displayed**")
+            st.markdown(f"**{len(filtered_df):,} variants displayed**")
 
         with col2:
             st.subheader("Candidate Variant Table")
