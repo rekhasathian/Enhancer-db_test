@@ -194,7 +194,7 @@ if page == "📊 Browse Data":
         ]
 
             
-            st.markdown(f"**{len(filtered_df):,} variants displayed**")
+        st.markdown(f"**{len(filtered_df):,} variants displayed**")
 
         with col2:
             st.subheader("Candidate Variant Table")
