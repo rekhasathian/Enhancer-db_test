@@ -247,13 +247,12 @@ if page == "📊 Browse Data":
                     ).any(axis=1)
                 ]
                 
-            # Display filtered table
-            st.dataframe(
-                filtered_df[display_cols],
-                use_container_width=True,
-                height=500,
-                hide_index=True
-            )
+            display_df = filtered_df[display_cols].copy()
+            display_df["ID"] = display_df["ID"].apply(make_clickable)
+
+            st.markdown(
+                display_df.to_html(escape=False, index=False),
+                unsafe_allow_html=True)
 
             # Download option
             csv = filtered_df.to_csv(index=False).encode('utf-8')
@@ -267,13 +266,7 @@ if page == "📊 Browse Data":
             def make_clickable(val):
                 return f'<a href="?variant_id={val}" target="_self">{val}</a>'
 
-            display_df = filtered_df[display_cols].copy()
-            display_df["ID"] = display_df["ID"].apply(make_clickable)
-
-            st.markdown(
-                display_df.to_html(escape=False, index=False),
-                unsafe_allow_html=True
-            )
+            
             # --- Detect clicked variant from query params ---
             query_params = st.query_params
             if "variant_id" in query_params:
