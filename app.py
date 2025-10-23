@@ -133,7 +133,7 @@ if page == "📊 Browse Data":
                 "LogOddRatio range:",
                 min_value=round(min_lor, 2),
                 max_value=round(max_lor, 2),
-                value=(round(min_lor, 2), round(max_lor, 2))
+                value=(round(min_lor, 2), round(max_lor, 2)))
 
             # Reset filters
             if st.button("🔄 Reset Filters"):
