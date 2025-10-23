@@ -193,11 +193,27 @@ if page == "📊 Browse Data":
         with col2:
             st.subheader("Candidate Variant Table")
 
-            # --- Search Bar ---
-            search_query = st.text_input(
-                "🔍 Search Variants",
-                placeholder="Search by rsID, CV ID, chromosome, or keyword..."
-            )
+            # --- Search Bar and Clear Button ---
+            search_col, clear_col = st.columns([4, 1])
+
+            # Initialize search state if not already set
+            if "search_query" not in st.session_state:
+                st.session_state.search_query = ""
+
+            with search_col:
+                search_query = st.text_input(
+                    "🔍 Search Variants",
+                    placeholder="Search by rsID, CV ID, chromosome, or keyword...",
+                    value=st.session_state.search_query,
+                    key=f"search_{st.session_state.filter_key}"
+                )
+
+            with clear_col:
+                st.write("")  # spacing for alignment
+                if st.button("❌ Clear"):
+                    st.session_state.search_query = ""
+                    st.session_state.filter_key += 1  # refresh all filters including search
+                    st.rerun()
             
             # Define the columns to display
             display_cols = [
