@@ -267,8 +267,9 @@ if page == "📊 Browse Data":
                     ).any(axis=1)
                 ]
 
-            def make_clickable(val):
-                return f'<a href="?variant_id={val}" target="_self">{val}</a>'
+            def make_clickable_button(val):
+                if st.button(val, key=f"btn_{val}"):
+                    st.experimental_set_query_params(variant_id=val)
 
             # Number of rows per page
             rows_per_page = 15
@@ -282,7 +283,8 @@ if page == "📊 Browse Data":
             end_idx = start_idx + rows_per_page
             
             display_df = filtered_df[display_cols].copy().iloc[start_idx:end_idx]
-            display_df["ID"] = display_df["ID"].apply(make_clickable)
+            for idx, row in display_df.iterrows():
+                make_clickable_button(row["ID"])
 
             # Wrap table in a div with horizontal scroll
             st.markdown(
