@@ -110,58 +110,89 @@ if page == "📊 Browse Data":
         with col1:
             st.subheader("Browse data")
             
-            # Dropdowns for primary filters
-            effect_options = ["All"] + sorted(combined_df["predicted_functional_effect"].dropna().unique().tolist())
-            selected_effect = st.selectbox("Predicted Functional Effect", effect_options)
+            # Initialize default filter values (only once)
+            if "selected_effect" not in st.session_state:
+                st.session_state.selected_effect = "All"
+            if "selected_class" not in st.session_state:
+                st.session_state.selected_class = "All"
+            if "selected_chrom" not in st.session_state:
+                st.session_state.selected_chrom = "All"
+            if "selected_assoc" not in st.session_state:
+                st.session_state.selected_assoc = "All"
+            if "selected_lor" not in st.session_state:
+                st.session_state.selected_lor = (float(df["LogOddRatio"].min()), float(df["LogOddRatio"].max()))
 
-            class_options = ["All"] + sorted(combined_df["class"].dropna().unique().tolist())
-            selected_class = st.selectbox("Class", class_options)
+            # Dropdown filters
+            effect_options = ["All"] + sorted(df["predicted_functional_effect"].unique().tolist())
+            class_options = ["All"] + sorted(df["class"].unique().tolist())
+            chrom_options = ["All"] + sorted(df["chromosome"].unique().tolist())
+            assoc_options = ["All"] + sorted(df["reported_clinical_association"].dropna().unique().tolist())
 
-            # --- Additional filters ---
-            st.markdown("### Additional Filters")
+            st.session_state.selected_effect = st.selectbox(
+                "Predicted Functional Effect",
+                effect_options,
+                index=effect_options.index(st.session_state.selected_effect),
+                key="predicted_effect"
+            )
 
-            # Chromosome filter
-            chrom_options = ["All"] + sorted(combined_df["chromosome"].dropna().unique().tolist())
-            selected_chrom = st.selectbox("Chromosome", chrom_options)
+            st.session_state.selected_class = st.selectbox(
+                "Variant Class",
+                class_options,
+                index=class_options.index(st.session_state.selected_class),
+                key="variant_class"
+            )
 
-            # Reported clinical association filter
-            assoc_options = ["All"] + sorted(
-            combined_df["reported_clinical_association"].dropna().unique().tolist())
-            selected_assoc = st.selectbox("Reported Clinical Association", assoc_options)
+            st.session_state.selected_chrom = st.selectbox(
+                "Chromosome",
+                chrom_options,
+                index=chrom_options.index(st.session_state.selected_chrom),
+                key="chrom"
+            )
+
+            st.session_state.selected_assoc = st.selectbox(
+                "Clinical Association",
+                assoc_options,
+                index=assoc_options.index(st.session_state.selected_assoc),
+                key="assoc"
+            )
 
             # LogOddRatio slider
-            min_lor, max_lor = float(combined_df["LogOddRatio"].min()), float(combined_df["LogOddRatio"].max())
-            selected_lor = st.slider(
-                "LogOddRatio range:",
-                min_value=round(min_lor, 2),
-                max_value=round(max_lor, 2),
-                value=(round(min_lor, 2), round(max_lor, 2)))
+            min_lor, max_lor = df["LogOddRatio"].min(), df["LogOddRatio"].max()
+            st.session_state.selected_lor = st.slider(
+                "LogOddRatio range",
+                float(min_lor), float(max_lor),
+                value=st.session_state.selected_lor,
+                key="lor_slider"
+            )
 
-            # Reset filters
+            # Reset button — clears all filters
             if st.button("🔄 Reset Filters"):
-                st.session_state.update({
-                    "selected_effect": "All",
-                    "selected_class": "All",
-                    "selected_chrom": "All",
-                    "selected_assoc": "All",
-                    "selected_lor": (round(min_lor,2), round(max_lor,2))
-                })
-                # Then rerun:
+                st.session_state.selected_effect = "All"
+                st.session_state.selected_class = "All"
+                st.session_state.selected_chrom = "All"
+                st.session_state.selected_assoc = "All"
+                st.session_state.selected_lor = (float(min_lor), float(max_lor))
                 st.rerun()
-            
-            # Apply filters
-            filtered_df = combined_df.copy()
-            if selected_effect != "All":
-                filtered_df = filtered_df[filtered_df["predicted_functional_effect"] == selected_effect]
-            if selected_class != "All":
-                filtered_df = filtered_df[filtered_df["class"] == selected_class]
-            if selected_chrom != "All":
-                filtered_df = filtered_df[filtered_df["chromosome"] == selected_chrom]
-            if selected_assoc != "All":
-                filtered_df = filtered_df[filtered_df["reported_clinical_association"] == selected_assoc]
-                filtered_df = filtered_df[
-                filtered_df["LogOddRatio"].between(selected_lor[0], selected_lor[1])
-            ]
+
+
+        # --- FILTERING LOGIC ---
+        filtered_df = df.copy()
+
+        if st.session_state.selected_effect != "All":
+            filtered_df = filtered_df[filtered_df["predicted_functional_effect"] == st.session_state.selected_effect]
+        if st.session_state.selected_class != "All":
+            filtered_df = filtered_df[filtered_df["class"] == st.session_state.selected_class]
+        if st.session_state.selected_chrom != "All":
+            filtered_df = filtered_df[filtered_df["chromosome"] == st.session_state.selected_chrom]
+        if st.session_state.selected_assoc != "All":
+            filtered_df = filtered_df[filtered_df["reported_clinical_association"] == st.session_state.selected_assoc]
+
+        min_lor_val, max_lor_val = st.session_state.selected_lor
+        filtered_df = filtered_df[
+            (filtered_df["LogOddRatio"] >= min_lor_val) &
+            (filtered_df["LogOddRatio"] <= max_lor_val)
+        ]
+
             
             st.markdown(f"**{len(filtered_df):,} variants displayed**")
 
