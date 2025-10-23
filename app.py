@@ -108,7 +108,14 @@ if page == "📊 Browse Data":
         col1, col2 = st.columns([1, 2], gap="large")
 
         with col1:
-            st.subheader("Browse data")
+            st.markdown(
+            """
+            <h1 style="font-size:18px; font-weight:bold; color:#1f2937;">
+                Filter data
+            </h1>
+            """,
+            unsafe_allow_html=True
+        )st.subheader("Browse data")
             
             # Initialize persistent states
             if "filter_key" not in st.session_state:
@@ -140,7 +147,15 @@ if page == "📊 Browse Data":
             )
 
             st.markdown("---")
-            st.markdown("**Additional Filters**")
+            st.markdown(
+            """
+            <h1 style="font-size:18px; font-weight:bold; color:#1f2937;">
+                Additional filter
+            </h1>
+            """,
+            unsafe_allow_html=True
+        )
+
             
             selected_chrom = st.selectbox(
                 "Chromosome",
@@ -191,8 +206,6 @@ if page == "📊 Browse Data":
             st.markdown(f"**{len(filtered_df):,} variants displayed**")
 
         with col2:
-            st.subheader("Candidate Variant Table")
-
             # --- Search Bar and Clear Button ---
             search_col, clear_col = st.columns([5, 0.6])
 
@@ -257,7 +270,39 @@ if page == "📊 Browse Data":
                 file_name="filtered_candidate_variants.csv",
                 mime="text/csv"
             )
-            
+
+            # --- Variant Detail Section ---
+            st.markdown("---")
+            st.subheader("Variant Details")
+
+            selected_variant_id = st.selectbox(
+                "Candidate Variant ID",
+                options=filtered_df["ID"].unique()
+            )
+
+            if selected_variant_id:
+                row = combined_df[combined_df["ID"] == selected_variant_id].iloc[0]
+
+                colA, colB = st.columns(2)
+                with colA:
+                    st.write("**Candidate Variant ID:**", row["ID"])
+                    st.write("**Genomic Element Class:**", row["class"])
+                    st.write("**Organism:**", "Human")
+                    st.write("**Genome Assembly:**", "GRCh38")
+                with colB:
+                    st.write("**Element Coordinate:**", row["region_coordinates"])
+                    st.write("**Closest Gene:**", row["gene"])
+                    st.write("**Strand:**", row["strand"])
+                    st.write("**Distance:**", row["distance"])
+
+                # LOF TF info
+                if row["predicted_functional_effect"] == "Loss of function":
+                    tf_df = combined_df[combined_df["ID"] == selected_variant_id][
+                        ["transcription_factor", "tf_reference_probability", "tf_alternative_probability", "tf_ScoreChange", "tf_LogOddRatio"]
+                    ]
+                    st.markdown("#### Transcription Factor Impact")
+                    st.dataframe(tf_df, use_container_width=True)
+                
     with tab2:
         st.header("Enhancers in Human Genome")
         
