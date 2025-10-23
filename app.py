@@ -110,7 +110,6 @@ if page == "📊 Browse Data":
         with col1:
             st.subheader("Browse data")
             
-            # Initialize default filter values (only once)
             if "selected_effect" not in st.session_state:
                 st.session_state.selected_effect = "All"
             if "selected_class" not in st.session_state:
@@ -121,49 +120,45 @@ if page == "📊 Browse Data":
                 st.session_state.selected_assoc = "All"
             if "selected_lor" not in st.session_state:
                 st.session_state.selected_lor = (
-                    float(combined_df["LogOddRatio"].min()), 
+                    float(combined_df["LogOddRatio"].min()),
                     float(combined_df["LogOddRatio"].max())
                 )
 
             # Dropdown filters
-            effect_options = ["All"] + sorted(combined_df["predicted_functional_effect"].unique().tolist())
-            class_options = ["All"] + sorted(combined_df["class"].unique().tolist())
-            chrom_options = ["All"] + sorted(combined_df["chromosome"].unique().tolist())
-            assoc_options = ["All"] + sorted(combined_df["reported_clinical_association"].dropna().unique().tolist())
-
+            effect_options = ["All"] + sorted(combined_df["predicted_functional_effect"].dropna().unique())
+            class_options = ["All"] + sorted(combined_df["class"].dropna().unique())
+            chrom_options = ["All"] + sorted(combined_df["chromosome"].dropna().unique())
+            assoc_options = ["All"] + sorted(combined_df["reported_clinical_association"].dropna().unique())
+            
+            effect_index = effect_options.index(st.session_state.selected_effect) \
+                if st.session_state.selected_effect in effect_options else 0
             st.session_state.selected_effect = st.selectbox(
-                "Predicted Functional Effect",
-                effect_options,
-                index=effect_options.index(st.session_state.selected_effect),
-                key="predicted_effect"
+                "Predicted Functional Effect", effect_options, index=effect_index, key="predicted_effect"
             )
 
+            class_index = class_options.index(st.session_state.selected_class) \
+                if st.session_state.selected_class in class_options else 0
             st.session_state.selected_class = st.selectbox(
-                "Variant Class",
-                class_options,
-                index=class_options.index(st.session_state.selected_class),
-                key="variant_class"
+                "Variant Class", class_options, index=class_index, key="variant_class"
             )
 
+            chrom_index = chrom_options.index(st.session_state.selected_chrom) \
+                if st.session_state.selected_chrom in chrom_options else 0
             st.session_state.selected_chrom = st.selectbox(
-                "Chromosome",
-                chrom_options,
-                index=chrom_options.index(st.session_state.selected_chrom),
-                key="chrom"
+                "Chromosome", chrom_options, index=chrom_index, key="chrom"
             )
 
+            assoc_index = assoc_options.index(st.session_state.selected_assoc) \
+                if st.session_state.selected_assoc in assoc_options else 0
             st.session_state.selected_assoc = st.selectbox(
-                "Clinical Association",
-                assoc_options,
-                index=assoc_options.index(st.session_state.selected_assoc),
-                key="assoc"
+                "Clinical Association", assoc_options, index=assoc_index, key="assoc"
             )
 
             # LogOddRatio slider
-            min_lor, max_lor = combined_df["LogOddRatio"].min(), combined_df["LogOddRatio"].max()
+            min_lor, max_lor = float(combined_df["LogOddRatio"].min()), float(combined_df["LogOddRatio"].max())
             st.session_state.selected_lor = st.slider(
                 "LogOddRatio range",
-                float(min_lor), float(max_lor),
+                min_lor, max_lor,
                 value=st.session_state.selected_lor,
                 key="lor_slider"
             )
