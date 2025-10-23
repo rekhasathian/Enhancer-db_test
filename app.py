@@ -127,9 +127,14 @@ if page == "📊 Browse Data":
         with col2:
             st.subheader("Candidate Variant Table")
 
+            # Define the columns to display
+            display_cols = [
+                "ID", "chromosome", "dbsnp_id", "ScoreChange", "LogOddRatio",
+                "reported_clinical_association", "predicted_functional_effect", "class"
+            ]
             # Display filtered table
             st.dataframe(
-                filtered_df,
+                filtered_df[display_cols],
                 use_container_width=True,
                 height=500,
                 hide_index=True
