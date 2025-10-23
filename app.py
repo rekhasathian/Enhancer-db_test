@@ -107,7 +107,7 @@ if page == "📊 Browse Data":
 
         col1, col2 = st.columns([1, 2], gap="large")
 
-        with col2:
+        with col1:
             st.subheader("Browse data")
             effect_options = ["All"] + sorted(combined_df["predicted_functional_effect"].dropna().unique().tolist())
             selected_effect = st.selectbox("Predicted Functional Effect", effect_options)
