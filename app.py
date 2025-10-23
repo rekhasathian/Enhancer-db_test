@@ -194,7 +194,7 @@ if page == "📊 Browse Data":
             st.subheader("Candidate Variant Table")
 
             # --- Search Bar and Clear Button ---
-            search_col, clear_col = st.columns([4, 1])
+            search_col, clear_col = st.columns([5, 0.6])
 
             # Initialize search state if not already set
             if "search_query" not in st.session_state:
@@ -209,10 +209,21 @@ if page == "📊 Browse Data":
                 )
 
             with clear_col:
-                st.write("")  # spacing for alignment
-                if st.button("❌ Clear"):
+                st.markdown(
+                    """
+                    <style>
+                    div[data-testid="stButton"] button {
+                        padding: 0.2rem 0.4rem;
+                        font-size: 0.8rem;
+                        margin-top: 1.6rem; /* vertically align with search bar */
+                    }
+                    </style>
+                    """,
+                    unsafe_allow_html=True,
+                )
+                if st.button("❌", help="Clear Search"):
                     st.session_state.search_query = ""
-                    st.session_state.filter_key += 1  # refresh all filters including search
+                    st.session_state.filter_key += 1
                     st.rerun()
             
             # Define the columns to display
