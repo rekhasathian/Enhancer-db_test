@@ -215,7 +215,7 @@ if page == "📊 Browse Data":
                     div[data-testid="stButton"] button {
                         padding: 0.2rem 0.4rem;
                         font-size: 0.8rem;
-                        margin-top: 1.0rem; /* vertically align with search bar */
+                        margin-top: 0.85rem; /* vertically align with search bar */
                     }
                     </style>
                     """,
