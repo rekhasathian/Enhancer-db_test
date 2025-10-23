@@ -274,36 +274,36 @@ if page == "📊 Browse Data":
                 st.markdown("---")
                 st.subheader(f"🔍 Variant Details: {var_id}")
 
-            # Filter selected variant from combined_df
-            selected_row = combined_df[combined_df["ID"] == var_id]
+                # Filter selected variant from combined_df
+                selected_row = combined_df[combined_df["ID"] == var_id]
 
-            if selected_row.empty:
-                st.warning("Variant not found in main table.")
-            else:
-                variant_class = selected_row.iloc[0]["class"]
+                if selected_row.empty:
+                    st.warning("Variant not found in main table.")
+                else:
+                    variant_class = selected_row.iloc[0]["class"]
                 
-                # Fetch detailed DataFrame directly from preloaded dictionary
-                details_df = detailed_datasets.get(variant_class)
+                    # Fetch detailed DataFrame directly from preloaded dictionary
+                    details_df = detailed_datasets.get(variant_class)
 
-                if details_df is not None:
-                    variant_data = details_df[details_df["ID"] == var_id]
+                    if details_df is not None:
+                        variant_data = details_df[details_df["ID"] == var_id]
 
-                    if not variant_data.empty:
-                        row = variant_data.iloc[0]
+                        if not variant_data.empty:
+                            row = variant_data.iloc[0]
 
-                        # --- General Info ---
-                        st.markdown("### 🧬 General Information")
-                        colA, colB = st.columns(2)
-                        with colA:
-                            st.write("**Candidate Variant ID:**", row["ID"])
-                            st.write("**Genomic Element Class:**", variant_class)
-                            st.write("**Organism:**", "Human")
-                            st.write("**Genome Assembly:**", "GRCh38")
-                        with colB:
-                            st.write("**Element Coordinate:**", row.get("element_coordinates", "N/A"))
-                            st.write("**Closest Gene:**", row.get("gene", "N/A"))
-                            st.write("**Strand:**", row.get("strand", "N/A"))
-                            st.write("**Distance:**", row.get("distance", "N/A"))
+                            # --- General Info ---
+                            st.markdown("### 🧬 General Information")
+                            colA, colB = st.columns(2)
+                            with colA:
+                                st.write("**Candidate Variant ID:**", row["ID"])
+                                st.write("**Genomic Element Class:**", variant_class)
+                                st.write("**Organism:**", "Human")
+                                st.write("**Genome Assembly:**", "GRCh38")
+                            with colB:
+                                st.write("**Element Coordinate:**", row.get("element_coordinates", "N/A"))
+                                st.write("**Closest Gene:**", row.get("gene", "N/A"))
+                                st.write("**Strand:**", row.get("strand", "N/A"))
+                                st.write("**Distance:**", row.get("distance", "N/A"))
                     
     with tab2:
         st.header("Enhancers in Human Genome")
