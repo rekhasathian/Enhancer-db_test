@@ -91,9 +91,9 @@ if page == "📊 Browse Data":
     # Header
     st.markdown(
     """
-    <h2 style="font-size:24px; font-weight:bold; color:#1f2937;">
+    <h1 style="font-size:24px; font-weight:bold; color:#1f2937;">
         DNABERT-Enhancer prediction data
-    </h2>
+    </h1>
     """,
     unsafe_allow_html=True
 )
@@ -103,7 +103,14 @@ if page == "📊 Browse Data":
 
     tab1, tab2 = st.tabs(["Candidate Variants", "Enhancers in Human Genome"])
     with tab1:
-        st.header("Candidate Variants predicted by DNABERT-Enhancer")
+        st.markdown(
+        """
+        <h2 style="font-size:24px; font-weight:bold; color:#1f2937;">
+            Candidate variants predicted by DNABERT-Enhancer
+        </h2>
+        """,
+        unsafe_allow_html=True
+    )
         
         datasets, detailed_datasets = load_data()
         combined_df = pd.concat(datasets.values(), ignore_index=True)
