@@ -90,8 +90,59 @@ if page == "📊 Browse Data":
 
     tab1, tab2 = st.tabs(["Candidate Variants", "Enhancers in Human Genome"])
     with tab1:
-        st.header("Candidate Variants")
+        st.header("Candidate Variants predicted by DNABERT-Enhancer")
+        
+        datasets = load_data()
+        combined_df = pd.concat(datasets.values(), ignore_index=True)
+        combined_df.insert(0, "ID", [f"cv{i+1:06d}" for i in range(len(combined_df))])
 
+        columns_order = [
+            "ID", "chromosome", "region_coordinates", "dbsnp_id",
+            "variant_start", "variant_end", "reference_nucleotide", "alternative_nucleotide",
+            "reference_probability", "alternative_probability", "ScoreChange", "LogOddRatio",
+            "reported_clinical_association", "gwas_url", "clinvar_url", "eqtl_url",
+            "predicted_functional_effect", "class"
+        ]
+        combined_df = combined_df[columns_order]
+
+        col1, col2 = st.columns([1, 2], gap="large")
+
+        with col2:
+            st.subheader("Browse data")
+            effect_options = ["All"] + sorted(combined_df["predicted_functional_effect"].dropna().unique().tolist())
+            selected_effect = st.selectbox("Predicted Functional Effect", effect_options)
+
+            class_options = ["All"] + sorted(combined_df["class"].dropna().unique().tolist())
+            selected_class = st.selectbox("Class", class_options)
+
+            # Apply filters
+            filtered_df = combined_df.copy()
+            if selected_effect != "All":
+                filtered_df = filtered_df[filtered_df["predicted_functional_effect"] == selected_effect]
+            if selected_class != "All":
+                filtered_df = filtered_df[filtered_df["class"] == selected_class]
+
+            st.markdown(f"**{len(filtered_df):,} variants displayed**")
+
+        with col2:
+            st.subheader("Candidate Variant Table")
+
+            # Display filtered table
+            st.dataframe(
+                filtered_df,
+                use_container_width=True,
+                height=500
+            )
+
+            # Download option
+            csv = filtered_df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="📥 Download Filtered Variants (CSV)",
+                data=csv,
+                file_name="filtered_candidate_variants.csv",
+                mime="text/csv"
+            )
+            
     with tab2:
         st.header("Enhancers in Human Genome")
         
