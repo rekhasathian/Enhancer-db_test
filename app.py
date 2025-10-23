@@ -246,7 +246,10 @@ if page == "📊 Browse Data":
                         lambda row: row.str.lower().str.contains(search_query, na=False)
                     ).any(axis=1)
                 ]
-                
+
+            def make_clickable(val):
+                return f'<a href="?variant_id={val}" target="_self">{val}</a>'
+
             display_df = filtered_df[display_cols].copy()
             display_df["ID"] = display_df["ID"].apply(make_clickable)
 
@@ -262,10 +265,6 @@ if page == "📊 Browse Data":
                 file_name="filtered_candidate_variants.csv",
                 mime="text/csv"
             )
-
-            def make_clickable(val):
-                return f'<a href="?variant_id={val}" target="_self">{val}</a>'
-
             
             # --- Detect clicked variant from query params ---
             query_params = st.query_params
