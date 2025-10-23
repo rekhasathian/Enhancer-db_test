@@ -283,15 +283,23 @@ if page == "📊 Browse Data":
             st.markdown("Select a row to view detailed variant information:")
             selected_data = st.data_editor(
                 display_df,
-                key=f"data_editor_{st.session_state.page_number}",
+                key=f"data_editor_{st.session_state.filter_key}_{st.session_state.page_number}",
                 hide_index=True,
                 use_container_width=True,
-                num_rows="dynamic",
-                # Add selection to the editor
-                on_select="rows",
+                column_config={"ID": st.column_config.TextColumn("ID", help="Click a row to view details")}
             )
 
-            # Initialize selected_variant_id
+            # To robustly get selection, we must use st.session_state[key]['selection']
+            editor_key = f"data_editor_{st.session_state.filter_key}_{st.session_state.page_number}"
+        
+            if editor_key in st.session_state and 'selection' in st.session_state[editor_key]:
+                 selected_indices = st.session_state[editor_key]['selection']['rows']
+                 if selected_indices:
+                     selected_row_index = selected_indices[0]
+                     # Get the ID of the selected row from the *original* displayed slice
+                     selected_variant_id = display_df.iloc[selected_row_index]["ID"]
+        else:
+            st.info("No variants match the current filters.")
             selected_variant_id = None
 
             # Check if any row is selected
