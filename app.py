@@ -264,9 +264,30 @@ if page == "📊 Browse Data":
             display_df = filtered_df[display_cols].copy().iloc[start_idx:end_idx]
             display_df["ID"] = display_df["ID"].apply(make_clickable)
 
+            # Wrap table in a div with horizontal scroll
             st.markdown(
-                display_df.to_html(escape=False, index=False),
-                unsafe_allow_html=True)
+                f"""
+                <div style="overflow-x:auto;">
+                        {display_df.to_html(escape=False, index=False)}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+            # Pagination buttons (smaller, aligned)
+            st.markdown(
+                """
+                <style>
+                div[data-testid="stButton"] button {
+                    padding: 0.2rem 0.6rem;
+                    font-size: 0.8rem;
+                    margin-top: 0.5rem;
+                    margin-right: 5px;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True,
+            )
 
             # Pagination buttons
             col_prev, col_next = st.columns(2)
