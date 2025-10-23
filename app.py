@@ -281,8 +281,8 @@ if page == "📊 Browse Data":
                 div[data-testid="stButton"] button {
                     padding: 0.2rem 0.6rem;
                     font-size: 0.5rem;
-                    margin-top: 0.02rem;
-                    margin-right: 20px;
+                    margin-top: 0.0001rem;
+                    margin-right: 2px;
                 }
                 </style>
                 """,
