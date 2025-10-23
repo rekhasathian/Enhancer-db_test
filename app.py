@@ -91,7 +91,7 @@ if page == "📊 Browse Data":
     # Header
     st.markdown(
     """
-    <h1 style="font-size:24px; font-weight:bold; color:#1f2937;">
+    <h1 style="font-size:30px; font-weight:bold; color:#1f2937;">
         DNABERT-Enhancer prediction data
     </h1>
     """,
@@ -128,7 +128,14 @@ if page == "📊 Browse Data":
         col1, col2 = st.columns([1, 2], gap="large")
 
         with col1:
-            st.subheader("Browse data")
+            st.markdown(
+            """
+            <h2 style="font-size:15px; font-weight:bold; color:#1f2937;">
+                Candidate variants predicted by DNABERT-Enhancer
+            </h2>
+            """,
+            unsafe_allow_html=True
+        )
             
             # Initialize persistent states
             if "filter_key" not in st.session_state:
