@@ -279,19 +279,28 @@ if page == "📊 Browse Data":
             end_idx = start_idx + rows_per_page
             
             display_df = filtered_df[display_cols].copy().iloc[start_idx:end_idx]
-            def make_clickable(val):
-                return f'<a href="?variant_id={val}" target="_self">{val}</a>'
-
-            display_df["ID"] = display_df["ID"].apply(make_clickable)
             
-            st.markdown(
-            f"""
-            <div style="overflow-x:auto;">
-                    {display_df.to_html(escape=False, index=False)}
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+            st.markdown("Select a row to view detailed variant information:")
+            selected_data = st.data_editor(
+                display_df,
+                key=f"data_editor_{st.session_state.page_number}",
+                hide_index=True,
+                use_container_width=True,
+                num_rows="dynamic",
+                # Add selection to the editor
+                on_select="rows",
+            )
+
+            # Initialize selected_variant_id
+            selected_variant_id = None
+
+            # Check if any row is selected
+            if selected_data and 'selection' in selected_data:
+                selected_indices = selected_data['selection']['rows']
+                if selected_indices:
+                    # Get the ID of the first selected row
+                    selected_row_index = selected_indices[0]
+                    selected_variant_id = display_df.iloc[selected_row_index]["ID"]
 
             # Pagination buttons (smaller, aligned)
             st.markdown("""
@@ -330,13 +339,12 @@ if page == "📊 Browse Data":
                 mime="text/csv"
             )
             
-            # --- Detect clicked variant from query params ---
-            query_params = st.experimental_get_query_params()
-            if "variant_id" in query_params:
-                var_id = query_params["variant_id"][0]
+            # --- Detect selected variant (from data_editor selection) ---
+            if selected_variant_id:
+                var_id = selected_variant_id
                 st.markdown("---")
                 st.subheader(f"🔍 Variant Details: {var_id}")
-
+                
                 # Filter selected variant from combined_df
                 selected_row = combined_df[combined_df["ID"] == var_id]
 
