@@ -92,6 +92,11 @@ if page == "📊 Browse Data":
     with tab1:
         st.header("Candidate Variants predicted by DNABERT-Enhancer")
         
+        # --- Search Bar ---
+        search_query = st.text_input(
+            "🔍 Search Variants",
+            placeholder="Search by rsID, CV ID, chromosome, or keyword..."
+        )
         datasets = load_data()
         combined_df = pd.concat(datasets.values(), ignore_index=True)
         combined_df.insert(0, "ID", [f"cv{i+1:06d}" for i in range(len(combined_df))])
