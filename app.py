@@ -115,7 +115,7 @@ if page == "📊 Browse Data":
             </h1>
             """,
             unsafe_allow_html=True
-        )st.subheader("Browse data")
+        )
             
             # Initialize persistent states
             if "filter_key" not in st.session_state:
