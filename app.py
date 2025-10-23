@@ -140,7 +140,7 @@ if page == "📊 Browse Data":
             )
 
             st.markdown("""
-            Additional filters""")
+            **Additional filters**""")
             
             selected_chrom = st.selectbox(
                 "Chromosome",
