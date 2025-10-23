@@ -215,7 +215,6 @@ if page == "📊 Browse Data":
             # --- Search Bar and Clear Button ---
             search_col, clear_col = st.columns([5, 0.6])
 
-            # Initialize search state if not already set
             if "search_query" not in st.session_state:
                 st.session_state.search_query = ""
 
@@ -228,24 +227,20 @@ if page == "📊 Browse Data":
                 )
 
             with clear_col:
-                st.markdown(
-                    """
+                st.markdown("""
                     <style>
                     div[data-testid="stButton"] button {
                         padding: 0.2rem 0.4rem;
                         font-size: 0.8rem;
-                        margin-top: 0.8rem; /* vertically align with search bar */
+                        margin-top: 0.8rem;
                     }
                     </style>
-                    """,
-                    unsafe_allow_html=True,
-                )
+                """, unsafe_allow_html=True)
                 if st.button("❌", help="Clear Search"):
                     st.session_state.search_query = ""
                     st.session_state.filter_key += 1
                     st.rerun()
-            
-            # Define the columns to display
+
             display_cols = [
                 "ID", "chromosome", "dbsnp_id", "ScoreChange", "LogOddRatio",
                 "reported_clinical_association", "predicted_functional_effect", "class"
@@ -259,16 +254,50 @@ if page == "📊 Browse Data":
                         lambda row: row.str.lower().str.contains(search_query, na=False)
                     ).any(axis=1)
                 ]
-                
-            # Display filtered table
-            st.dataframe(
-                filtered_df[display_cols],
-                use_container_width=True,
-                height=500,
-                hide_index=True
-            )
 
-            # Download option
+            st.markdown("### Candidate Variants Table")
+    
+            # Display variants with checkboxes for details
+            for idx, row in filtered_df.iterrows():
+                cols = st.columns([0.1, 1, 1, 1, 1, 1, 1, 1])
+                show_details = cols[0].checkbox(f"{row['ID']}", key=f"show_{row['ID']}")
+                cols[1].write(row["chromosome"])
+                cols[2].write(row["dbsnp_id"])
+                cols[3].write(row["ScoreChange"])
+                cols[4].write(row["LogOddRatio"])
+                cols[5].write(row["reported_clinical_association"])
+                cols[6].write(row["predicted_functional_effect"])
+                cols[7].write(row["class"])
+
+                if show_details:
+                    variant_class = row["class"]
+                    details_df = detail_datasets.get(variant_class)
+                    if details_df is not None:
+                        variant_data = details_df[details_df["ID"] == row["ID"]]
+                        if not variant_data.empty:
+                            vrow = variant_data.iloc[0]
+                            st.markdown(f"**Element Coordinate:** {vrow.get('element_coordinates', 'N/A')}")
+                            st.markdown(f"**Closest Gene:** {vrow.get('gene', 'N/A')}")
+                            st.markdown(f"**Strand:** {vrow.get('strand', 'N/A')}")
+                            st.markdown(f"**Distance:** {vrow.get('distance', 'N/A')}")
+
+                            # Transcription factor info if LOF
+                            if row["predicted_functional_effect"] == "Loss of function":
+                                tf_cols = ["transcription_factor", "tf_reference_probability",
+                                           "tf_alternative_probability", "tf_ScoreChange", "tf_LogOddRatio"]
+                                st.markdown("#### Transcription Factor Impact")
+                                st.dataframe(variant_data[tf_cols], use_container_width=True)
+
+                            prob_cols = ["reference_probability", "alternative_probability",
+                                         "ScoreChange", "LogOddRatio", "predicted_functional_effect"]
+                            st.markdown("#### Probability & Effect Metrics")
+                            st.dataframe(variant_data[prob_cols], use_container_width=True)
+                        else:
+                            st.warning(f"No detailed record found for {row['ID']}")
+                    else:
+                        st.warning(f"No details file configured for class: {variant_class}")
+
+            # --- Download option ---
             csv = filtered_df.to_csv(index=False).encode('utf-8')
             st.download_button(
                 label="📥 Download Filtered Variants (CSV)",
@@ -276,38 +305,6 @@ if page == "📊 Browse Data":
                 file_name="filtered_candidate_variants.csv",
                 mime="text/csv"
             )
-
-            # --- Variant Detail Section ---
-            st.markdown("---")
-            st.subheader("Variant Details")
-
-            selected_variant_id = st.selectbox(
-                "Candidate Variant ID",
-                options=filtered_df["ID"].unique()
-            )
-
-            if selected_variant_id:
-                row = combined_df[combined_df["ID"] == selected_variant_id].iloc[0]
-
-                colA, colB = st.columns(2)
-                with colA:
-                    st.write("**Candidate Variant ID:**", row["ID"])
-                    st.write("**Genomic Element Class:**", row["class"])
-                    st.write("**Organism:**", "Human")
-                    st.write("**Genome Assembly:**", "GRCh38")
-                with colB:
-                    st.write("**Element Coordinate:**", row["region_coordinates"])
-                    st.write("**Closest Gene:**", row["gene"])
-                    st.write("**Strand:**", row["strand"])
-                    st.write("**Distance:**", row["distance"])
-
-                # LOF TF info
-                if row["predicted_functional_effect"] == "Loss of function":
-                    tf_df = combined_df[combined_df["ID"] == selected_variant_id][
-                        ["transcription_factor", "tf_reference_probability", "tf_alternative_probability", "tf_ScoreChange", "tf_LogOddRatio"]
-                    ]
-                    st.markdown("#### Transcription Factor Impact")
-                    st.dataframe(tf_df, use_container_width=True)
                 
     with tab2:
         st.header("Enhancers in Human Genome")
