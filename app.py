@@ -143,11 +143,7 @@ if page == "📊 Browse Data":
             assoc_index = assoc_options.index(st.session_state.selected_assoc) \
                 if st.session_state.selected_assoc in assoc_options else 0
             effect_index = effect_options.index(st.session_state.selected_effect) \
-                if st.session_state.selected_effect in effect_options else 0
-            st.session_state.selected_effect = st.selectbox(
-                "Predicted Functional Effect", effect_options, index=effect_index, key="predicted_effect"
-            )
-
+                
             # --- DROPDOWNS ---
             st.session_state.selected_effect = st.selectbox(
                 "Predicted Functional Effect",
