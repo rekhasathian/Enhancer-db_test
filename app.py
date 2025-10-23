@@ -251,12 +251,6 @@ if page == "📊 Browse Data":
                     st.session_state.search_query = ""
                     st.session_state.filter_key += 1
                     st.rerun()
-            
-            # Define the columns to display
-            display_cols = [
-                "ID", "chromosome", "dbsnp_id", "ScoreChange", "LogOddRatio",
-                "reported_clinical_association", "predicted_functional_effect", "class"
-            ]
 
             # --- Apply Search Filter ---
             if search_query:
@@ -267,6 +261,12 @@ if page == "📊 Browse Data":
                     ).any(axis=1)
                 ]
 
+            # Define the columns to display
+            display_cols = [
+                "ID", "chromosome", "dbsnp_id", "ScoreChange", "LogOddRatio",
+                "reported_clinical_association", "predicted_functional_effect", "class"
+            ]
+            
             # Number of rows per page
             rows_per_page = 15
 
@@ -279,20 +279,32 @@ if page == "📊 Browse Data":
             end_idx = start_idx + rows_per_page
             
             display_df = filtered_df[display_cols].copy().iloc[start_idx:end_idx]
-            for _, row in display_df.iterrows():
-                if st.button(row["ID"], key=f"btn_{row['ID']}"):
-                    st.experimental_set_query_params(variant_id=row["ID"])
+            def make_clickable(val):
+                return f'<a href="?variant_id={val}" target="_self">{val}</a>'
 
+            display_df["ID"] = display_df["ID"].apply(make_clickable)
+            
+            st.markdown(
+            f"""
+            <div style="overflow-x:auto;">
+                    {display_df.to_html(escape=False, index=False)}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+            # Pagination buttons (smaller, aligned)
             st.markdown("""
-            <style>
-            div.stButton > button {
-                padding: 0.2rem 0.4rem;
-                font-size: 0.8rem;
-                margin: 1px;
-            }
-            </style>
+                <style>
+                div[data-testid="stButton"] button {
+                    padding: 0.2rem 0.6rem;
+                    font-size: 0.5rem;
+                    margin-top: 0.0001rem;
+                    margin-right: 2px;
+                }
+                </style>
             """, unsafe_allow_html=True)
-
+    
             # Pagination buttons
             col_prev, col_next = st.columns(2)
             with col_prev:
@@ -319,7 +331,7 @@ if page == "📊 Browse Data":
             )
             
             # --- Detect clicked variant from query params ---
-            query_params = st.query_params
+            query_params = st.experimental_get_query_params()
             if "variant_id" in query_params:
                 var_id = query_params["variant_id"][0]
                 st.markdown("---")
