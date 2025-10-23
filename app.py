@@ -250,12 +250,39 @@ if page == "📊 Browse Data":
             def make_clickable(val):
                 return f'<a href="?variant_id={val}" target="_self">{val}</a>'
 
-            display_df = filtered_df[display_cols].copy().head(10)
+            # Number of rows per page
+            rows_per_page = 15
+
+            # Initialize current page
+            if "page_number" not in st.session_state:
+                st.session_state.page_number = 0
+
+            # Calculate start and end indices
+            start_idx = st.session_state.page_number * rows_per_page
+            end_idx = start_idx + rows_per_page
+            
+            display_df = filtered_df[display_cols].copy().iloc[start_idx:end_idx]
             display_df["ID"] = display_df["ID"].apply(make_clickable)
 
             st.markdown(
                 display_df.to_html(escape=False, index=False),
                 unsafe_allow_html=True)
+
+            # Pagination buttons
+            col_prev, col_next = st.columns(2)
+            with col_prev:
+                if st.button("⬅️ Previous"):
+                    if st.session_state.page_number > 0:
+                        st.session_state.page_number -= 1
+                        st.experimental_rerun()
+            with col_next:
+                if st.button("Next ➡️"):
+                    if end_idx < len(filtered_df):
+                        st.session_state.page_number += 1
+                        st.experimental_rerun()
+
+            # Optional: show current page info
+            st.markdown(f"Showing rows {start_idx+1} to {min(end_idx, len(filtered_df))} of {len(filtered_df)}")
 
             # Download option
             csv = filtered_df.to_csv(index=False).encode('utf-8')
