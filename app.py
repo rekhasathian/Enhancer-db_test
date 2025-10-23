@@ -144,7 +144,7 @@ if page == "📊 Browse Data":
                 selected_chrom = "All"
                 selected_assoc = "All"
                 selected_lor = (round(min_lor, 2), round(max_lor, 2))
-                st.experimental_rerun()
+                st.rerun()
             
             # Apply filters
             filtered_df = combined_df.copy()
