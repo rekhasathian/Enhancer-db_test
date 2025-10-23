@@ -62,14 +62,8 @@ def load_data():
         'Enhancer LOF': pd.read_csv('./data/Enhancer_LOF_updated.csv'),
         'Non-enhancer GOF': pd.read_csv('./data/Non-enhancer_GOF_updated.csv')
     }
-    # Detailed info tables
-    detailed_datasets = {
-        'Enhancer GOF': pd.read_csv('./data/Detailed_info_enhancer_GOF.csv'),
-        'Enhancer LOF': pd.read_csv('./data/Detailed_info_enhancer_LOF.csv'),
-        'Non-enhancer GOF': pd.read_csv('./data/Detailed_info_non-enhancer_GOF.csv')
-    }
-    return datasets, detailed_datasets
-    
+    return datasets
+
 # Sidebar
 with st.sidebar:
     st.markdown("## 🧬 DNABERT-Enhancer Portal")
@@ -89,30 +83,16 @@ with st.sidebar:
 # Main content
 if page == "📊 Browse Data":
     # Header
-    st.markdown(
-    """
-    <h1 style="font-size:30px; font-weight:bold; color:#1f2937;">
-        DNABERT-Enhancer prediction data
-    </h1>
-    """,
-    unsafe_allow_html=True
-)
+    st.title("DNABERT-Enhancer prediction data")
     st.markdown("""
     Browse through the data using the tabs
     """)
 
     tab1, tab2 = st.tabs(["Candidate Variants", "Enhancers in Human Genome"])
     with tab1:
-        st.markdown(
-        """
-        <h2 style="font-size:24px; font-weight:bold; color:#1f2937;">
-            Candidate variants predicted by DNABERT-Enhancer
-        </h2>
-        """,
-        unsafe_allow_html=True
-    )
+        st.header("Candidate Variants predicted by DNABERT-Enhancer")
         
-        datasets, detailed_datasets = load_data()
+        datasets = load_data()
         combined_df = pd.concat(datasets.values(), ignore_index=True)
         combined_df.insert(0, "ID", [f"cv{i+1:06d}" for i in range(len(combined_df))])
 
@@ -128,14 +108,7 @@ if page == "📊 Browse Data":
         col1, col2 = st.columns([1, 2], gap="large")
 
         with col1:
-            st.markdown(
-            """
-            <h2 style="font-size:15px; font-weight:bold; color:#1f2937;">
-                Filter data
-            </h2>
-            """,
-            unsafe_allow_html=True
-        )
+            st.subheader("Browse data")
             
             # Initialize persistent states
             if "filter_key" not in st.session_state:
@@ -218,6 +191,7 @@ if page == "📊 Browse Data":
             st.markdown(f"**{len(filtered_df):,} variants displayed**")
 
         with col2:
+            st.subheader("Candidate Variant Table")
 
             # --- Search Bar and Clear Button ---
             search_col, clear_col = st.columns([5, 0.6])
@@ -251,6 +225,12 @@ if page == "📊 Browse Data":
                     st.session_state.search_query = ""
                     st.session_state.filter_key += 1
                     st.rerun()
+            
+            # Define the columns to display
+            display_cols = [
+                "ID", "chromosome", "dbsnp_id", "ScoreChange", "LogOddRatio",
+                "reported_clinical_association", "predicted_functional_effect", "class"
+            ]
 
             # --- Apply Search Filter ---
             if search_query:
@@ -260,83 +240,14 @@ if page == "📊 Browse Data":
                         lambda row: row.str.lower().str.contains(search_query, na=False)
                     ).any(axis=1)
                 ]
-
-            # Define the columns to display
-            display_cols = [
-                "ID", "chromosome", "dbsnp_id", "ScoreChange", "LogOddRatio",
-                "reported_clinical_association", "predicted_functional_effect", "class"
-            ]
-            
-            # Number of rows per page
-            rows_per_page = 15
-
-            # Initialize current page
-            if "page_number" not in st.session_state:
-                st.session_state.page_number = 0
-
-            # Calculate start and end indices
-            start_idx = st.session_state.page_number * rows_per_page
-            end_idx = start_idx + rows_per_page
-            
-            display_df = filtered_df[display_cols].copy().iloc[start_idx:end_idx]
-            
-            st.markdown("Select a row to view detailed variant information:")
-            selected_data = st.data_editor(
-                display_df,
-                key=f"data_editor_{st.session_state.filter_key}_{st.session_state.page_number}",
-                hide_index=True,
+                
+            # Display filtered table
+            st.dataframe(
+                filtered_df[display_cols],
                 use_container_width=True,
-                column_config={"ID": st.column_config.TextColumn("ID", help="Click a row to view details")}
+                height=500,
+                hide_index=True
             )
-
-            # To robustly get selection, we must use st.session_state[key]['selection']
-            editor_key = f"data_editor_{st.session_state.filter_key}_{st.session_state.page_number}"
-        
-            if editor_key in st.session_state and 'selection' in st.session_state[editor_key]:
-                 selected_indices = st.session_state[editor_key]['selection']['rows']
-                 if selected_indices:
-                     selected_row_index = selected_indices[0]
-                     # Get the ID of the selected row from the *original* displayed slice
-                     selected_variant_id = display_df.iloc[selected_row_index]["ID"]
-            else:
-                st.info("No variants match the current filters.")
-                selected_variant_id = None
-
-            # Check if any row is selected
-            if selected_data and 'selection' in selected_data:
-                selected_indices = selected_data['selection']['rows']
-                if selected_indices:
-                    # Get the ID of the first selected row
-                    selected_row_index = selected_indices[0]
-                    selected_variant_id = display_df.iloc[selected_row_index]["ID"]
-
-            # Pagination buttons (smaller, aligned)
-            st.markdown("""
-                <style>
-                div[data-testid="stButton"] button {
-                    padding: 0.2rem 0.6rem;
-                    font-size: 0.5rem;
-                    margin-top: 0.0001rem;
-                    margin-right: 2px;
-                }
-                </style>
-            """, unsafe_allow_html=True)
-    
-            # Pagination buttons
-            col_prev, col_next = st.columns(2)
-            with col_prev:
-                if st.button("⬅️ Previous"):
-                    if st.session_state.page_number > 0:
-                        st.session_state.page_number -= 1
-                        st.rerun()
-            with col_next:
-                if st.button("Next ➡️"):
-                    if end_idx < len(filtered_df):
-                        st.session_state.page_number += 1
-                        st.rerun()
-
-            # Optional: show current page info
-            st.markdown(f"Showing rows {start_idx+1} to {min(end_idx, len(filtered_df))} of {len(filtered_df)}")
 
             # Download option
             csv = filtered_df.to_csv(index=False).encode('utf-8')
@@ -347,71 +258,6 @@ if page == "📊 Browse Data":
                 mime="text/csv"
             )
             
-            # --- Detect selected variant (from data_editor selection) ---
-            if selected_variant_id:
-                var_id = selected_variant_id
-                st.markdown("---")
-                st.subheader(f"🔍 Variant Details: {var_id}")
-                
-                # Filter selected variant from combined_df
-                selected_row = combined_df[combined_df["ID"] == var_id]
-
-                if selected_row.empty:
-                    st.warning("Variant not found in main table.")
-                else:
-                    variant_class = selected_row.iloc[0]["class"]
-                
-                    # Fetch detailed DataFrame directly from preloaded dictionary
-                    details_df = detailed_datasets.get(variant_class)
-
-                    if details_df is not None:
-                        variant_data = details_df[details_df["ID"] == var_id]
-
-                        if not variant_data.empty:
-                            row = variant_data.iloc[0]
-
-                            # --- General Info ---
-                            st.markdown("### 🧬 General Information")
-                            colA, colB = st.columns(2)
-                            with colA:
-                                st.write("**Candidate Variant ID:**", row["ID"])
-                                st.write("**Genomic Element Class:**", variant_class)
-                                st.write("**Organism:**", "Human")
-                                st.write("**Genome Assembly:**", "GRCh38")
-                            with colB:
-                                st.write("**Element Coordinate:**", row.get("element_coordinates", "N/A"))
-                                st.write("**Closest Gene:**", row.get("gene", "N/A"))
-                                st.write("**Strand:**", row.get("strand", "N/A"))
-                                st.write("**Distance:**", row.get("distance", "N/A"))
-
-                            # --- TF Details (Enhancer LOF only) ---
-                            if variant_class == "Enhancer LOF":
-                                st.markdown("### 🧫 Transcription Factor Details")
-                                tf_cols = [
-                                    "transcription_factor",
-                                    "tf_reference_probability",
-                                    "tf_alternative_probability",
-                                    "tf_ScoreChange",
-                                    "tf_LogOddRatio",
-                                ]
-                                tf_df = variant_data[tf_cols]
-                                st.dataframe(tf_df, use_container_width=True)
-
-                            # --- Probability & Effect Metrics ---
-                            st.markdown("### 📈 Probability and Effect Metrics")
-                            prob_cols = [
-                                "reference_probability",
-                                "alternative_probability",
-                                "ScoreChange",
-                                "LogOddRatio",
-                                "predicted_functional_effect",
-                            ]
-                            st.dataframe(variant_data[prob_cols], use_container_width=True)
-                        else:
-                            st.warning(f"No detailed record found for {var_id}.")
-                    else:
-                        st.warning(f"No detailed dataset found for class: {variant_class}")
-                    
     with tab2:
         st.header("Enhancers in Human Genome")
         
