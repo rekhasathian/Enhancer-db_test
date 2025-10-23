@@ -109,6 +109,8 @@ if page == "📊 Browse Data":
 
         with col1:
             st.subheader("Browse data")
+            
+            # Dropdowns for primary filters
             effect_options = ["All"] + sorted(combined_df["predicted_functional_effect"].dropna().unique().tolist())
             selected_effect = st.selectbox("Predicted Functional Effect", effect_options)
 
