@@ -282,7 +282,7 @@ if page == "📊 Browse Data":
             start_idx = st.session_state.page_number * rows_per_page
             end_idx = start_idx + rows_per_page
             
-            display_df = filtered_df[display_cols].copy().iloc[start_idx:end_idx]
+            #display_df = filtered_df[display_cols].copy().iloc[start_idx:end_idx]
             for idx, row in display_df.iterrows():
                 make_clickable_button(row["ID"])
 
