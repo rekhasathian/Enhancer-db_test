@@ -295,12 +295,12 @@ if page == "📊 Browse Data":
                 if st.button("⬅️ Previous"):
                     if st.session_state.page_number > 0:
                         st.session_state.page_number -= 1
-                        st.experimental_rerun()
+                        st.rerun()
             with col_next:
                 if st.button("Next ➡️"):
                     if end_idx < len(filtered_df):
                         st.session_state.page_number += 1
-                        st.experimental_rerun()
+                        st.rerun()
 
             # Optional: show current page info
             st.markdown(f"Showing rows {start_idx+1} to {min(end_idx, len(filtered_df))} of {len(filtered_df)}")
