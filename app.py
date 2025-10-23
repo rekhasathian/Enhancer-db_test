@@ -139,11 +139,14 @@ if page == "📊 Browse Data":
 
             # Reset filters
             if st.button("🔄 Reset Filters"):
-                selected_effect = "All"
-                selected_class = "All"
-                selected_chrom = "All"
-                selected_assoc = "All"
-                selected_lor = (round(min_lor, 2), round(max_lor, 2))
+                st.session_state.update({
+                    "selected_effect": "All",
+                    "selected_class": "All",
+                    "selected_chrom": "All",
+                    "selected_assoc": "All",
+                    "selected_lor": (round(min_lor,2), round(max_lor,2))
+                })
+                # Then rerun:
                 st.rerun()
             
             # Apply filters
