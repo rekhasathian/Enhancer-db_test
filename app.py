@@ -267,10 +267,6 @@ if page == "📊 Browse Data":
                     ).any(axis=1)
                 ]
 
-            def make_clickable_button(val):
-                if st.button(val, key=f"btn_{val}"):
-                    st.experimental_set_query_params(variant_id=val)
-
             # Number of rows per page
             rows_per_page = 15
 
@@ -282,34 +278,20 @@ if page == "📊 Browse Data":
             start_idx = st.session_state.page_number * rows_per_page
             end_idx = start_idx + rows_per_page
             
-            #display_df = filtered_df[display_cols].copy().iloc[start_idx:end_idx]
-            for idx, row in display_df.iterrows():
-                make_clickable_button(row["ID"])
+            display_df = filtered_df[display_cols].copy().iloc[start_idx:end_idx]
+            for _, row in display_df.iterrows():
+                if st.button(row["ID"], key=f"btn_{row['ID']}"):
+                    st.experimental_set_query_params(variant_id=row["ID"])
 
-            # Wrap table in a div with horizontal scroll
-            st.markdown(
-                f"""
-                <div style="overflow-x:auto;">
-                        {display_df.to_html(escape=False, index=False)}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-            # Pagination buttons (smaller, aligned)
-            st.markdown(
-                """
-                <style>
-                div[data-testid="stButton"] button {
-                    padding: 0.2rem 0.6rem;
-                    font-size: 0.5rem;
-                    margin-top: 0.0001rem;
-                    margin-right: 2px;
-                }
-                </style>
-                """,
-                unsafe_allow_html=True,
-            )
+            st.markdown("""
+            <style>
+            div.stButton > button {
+                padding: 0.2rem 0.4rem;
+                font-size: 0.8rem;
+                margin: 1px;
+            }
+            </style>
+            """, unsafe_allow_html=True)
 
             # Pagination buttons
             col_prev, col_next = st.columns(2)
