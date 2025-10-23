@@ -120,13 +120,13 @@ if page == "📊 Browse Data":
             if "selected_assoc" not in st.session_state:
                 st.session_state.selected_assoc = "All"
             if "selected_lor" not in st.session_state:
-                st.session_state.selected_lor = (float(df["LogOddRatio"].min()), float(df["LogOddRatio"].max()))
+                st.session_state.selected_lor = (float(combined_df["LogOddRatio"].min()), float(combined_df["LogOddRatio"].max()))
 
             # Dropdown filters
-            effect_options = ["All"] + sorted(df["predicted_functional_effect"].unique().tolist())
-            class_options = ["All"] + sorted(df["class"].unique().tolist())
-            chrom_options = ["All"] + sorted(df["chromosome"].unique().tolist())
-            assoc_options = ["All"] + sorted(df["reported_clinical_association"].dropna().unique().tolist())
+            effect_options = ["All"] + sorted(combined_df["predicted_functional_effect"].unique().tolist())
+            class_options = ["All"] + sorted(combined_df["class"].unique().tolist())
+            chrom_options = ["All"] + sorted(combined_df["chromosome"].unique().tolist())
+            assoc_options = ["All"] + sorted(combined_df["reported_clinical_association"].dropna().unique().tolist())
 
             st.session_state.selected_effect = st.selectbox(
                 "Predicted Functional Effect",
@@ -157,7 +157,7 @@ if page == "📊 Browse Data":
             )
 
             # LogOddRatio slider
-            min_lor, max_lor = df["LogOddRatio"].min(), df["LogOddRatio"].max()
+            min_lor, max_lor = combined_df["LogOddRatio"].min(), combined_df["LogOddRatio"].max()
             st.session_state.selected_lor = st.slider(
                 "LogOddRatio range",
                 float(min_lor), float(max_lor),
@@ -176,7 +176,7 @@ if page == "📊 Browse Data":
 
 
         # --- FILTERING LOGIC ---
-        filtered_df = df.copy()
+        filtered_df = combined_df.copy()
 
         if st.session_state.selected_effect != "All":
             filtered_df = filtered_df[filtered_df["predicted_functional_effect"] == st.session_state.selected_effect]
