@@ -245,6 +245,8 @@ if page == "📊 Browse Data":
                     ).any(axis=1)
                 ]
 
+            filtered_display_df = filtered_display_df[display_cols].drop_duplicates()
+
             st.dataframe(filtered_display_df[display_cols], use_container_width=True, height=500, hide_index=True)
 
             # --- Download option ---
