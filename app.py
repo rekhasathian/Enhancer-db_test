@@ -206,11 +206,11 @@ if page == "📊 Browse Data":
                 (filtered_df["LogOddRatio"] <= max_lor_val)
             ]
 
-            unique_key_cols = ["chromosome", "dbsnp_id", "variant_start", "variant_end", "reference_nucleotide", "alternative_nucleotide"]
+            # unique_key_cols = ["chromosome", "dbsnp_id", "variant_start", "variant_end", "reference_nucleotide", "alternative_nucleotide"]
 
-            # Count unique rows based on these columns
-            num_unique_variants = len(filtered_df.drop_duplicates(subset=unique_key_cols))
-            st.markdown(f"**{num_unique_variants:,} variants displayed**")
+            # # Count unique rows based on these columns
+            # num_unique_variants = len(filtered_df.drop_duplicates(subset=unique_key_cols))
+            # st.markdown(f"**{num_unique_variants:,} variants displayed**")
 
         with col2:
     		# --- Search Bar and Clear Button ---
@@ -261,7 +261,19 @@ if page == "📊 Browse Data":
                 mime="text/csv"
             )
         
-
+        st.markdown("---")
+        st.markdown(
+            """
+            <h1 style="font-size:20px; font-weight:bold; color:#1f2937;">
+                Detailed information on candidate variants
+            </h1>
+            """,
+            unsafe_allow_html=True
+        )
+        selected_variant_id = st.selectbox(
+                "Select Candidate Variant ID to see details",
+                options=filtered_display_df["ID"].unique()
+            )
                 
     with tab2:
         st.header("Enhancers in Human Genome")
