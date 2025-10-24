@@ -286,8 +286,41 @@ if page == "📊 Browse Data":
         combined_wgp_df = pd.concat(df_list, ignore_index=True)
         
         st.header("Enhancers in Human Genome")
-        
-        st.dataframe(combined_wgp_df.head(50), use_container_width=True, height=500, hide_index=True)
+        col1, col2 = st.columns([1, 2], gap="large")
+        with col1:
+            st.subheader("Filter data")
+            
+            # Initialize persistent states
+            if "filter_key" not in st.session_state:
+                st.session_state.filter_key = 0
+
+            chrom_options = ["All"] + sorted(combined_wgp_df["chromosome"].dropna().unique())
+            selected_chrom = st.selectbox(
+                "Chromosome",
+                chrom_options,
+                key=f"chrom_{st.session_state.filter_key}"
+            )
+            # Reset filters
+            if st.button("🔄 Reset Filters"):
+                st.session_state.filter_key += 1
+                st.session_state.lor_range = (float(min_lor), float(max_lor))
+                st.rerun()
+
+            filtered_df = combined_wgp_df.copy()
+            if selected_chrom != "All":
+                filtered_df = filtered_df[filtered_df["chromosome"] == selected_chrom]
+
+        with col2:
+            st.dataframe(combined_wgp_df.head(50), use_container_width=True, height=500, hide_index=True)
+
+            # Download option
+            csv = filtered_df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="📥 Download Filtered Enhancers (CSV)",
+                data=csv,
+                file_name="filtered_enhancer_regions.csv",
+                mime="text/csv"
+            )
         
 else:  # About page
     st.title("About DNABERT-Enhancer portal")
