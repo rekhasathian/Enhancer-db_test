@@ -95,11 +95,11 @@ if page == "📊 Browse Data":
         st.header("Candidate Variants predicted by DNABERT-Enhancer")
         
         combined_df = load_data()
-        st.write("Columns in combined_df:", combined_df.columns.tolist())
+        # st.write("Columns in combined_df:", combined_df.columns.tolist())
         columns_order = [
             "ID","chromosome","region_coordinates","dbsnp_id","variant_start","variant_end","reference_nucleotide",
             "alternative_nucleotide","reference_probability","alternative_probability","ScoreChange","LogOddRatio",
-            "reported_clinical_association","gwas_url,clinvar_url","eqtl_url","predicted_functional_effect","class",
+            "reported_clinical_association","gwas_url","clinvar_url","eqtl_url","predicted_functional_effect","class",
             "transcription_factor","tf_reference_probability","tf_alternative_probability","tf_ScoreChange","tf_LogOddRatio",
             "gene","strand","distance","element_coordinates","variant_coordinates"
         ]
