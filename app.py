@@ -305,7 +305,7 @@ if page == "📊 Browse Data":
             if selected_chrom != "All":
                 filtered_df = filtered_df[filtered_df["chromosome"] == selected_chrom]
             # Reset filters
-            if st.button("🔄 Reset Filters"):
+            if st.button("🔄 Reset Filters", key="tab2_reset"):
                 st.session_state.filter_key_tab2 += 1
                 st.rerun()
 
