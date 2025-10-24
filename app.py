@@ -95,7 +95,7 @@ if page == "📊 Browse Data":
         st.header("Candidate Variants predicted by DNABERT-Enhancer")
         
         combined_df = load_data()
-
+        st.write("Columns in combined_df:", combined_df.columns.tolist())
         columns_order = [
             "ID","chromosome","region_coordinates","dbsnp_id","variant_start","variant_end","reference_nucleotide",
             "alternative_nucleotide","reference_probability","alternative_probability","ScoreChange","LogOddRatio",
