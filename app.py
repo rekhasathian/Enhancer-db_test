@@ -6,6 +6,8 @@ import plotly.express as px
 from PIL import Image
 import io
 import base64
+import glob
+import os
 
 # Page configuration
 st.set_page_config(
@@ -65,6 +67,12 @@ def load_data():
     combined_df = pd.concat(detail_datasets.values(), ignore_index=True)
     return combined_df
     
+# Load and combine all split files
+data_path = "data/"  # change to the folder where your CSVs are
+all_files = sorted(glob.glob(os.path.join(data_path, "WGP_*.csv")))
+# Combine all parts into one DataFrame
+df_list = [pd.read_csv(f) for f in all_files]
+combined_wgp_df = pd.concat(df_list, ignore_index=True)
 
 # Sidebar
 with st.sidebar:
@@ -277,6 +285,14 @@ if page == "📊 Browse Data":
                 
     with tab2:
         st.header("Enhancers in Human Genome")
+        st.markdown(
+            f"""
+            <div style="overflow-x:auto; max-height:600px;">
+                {combined_wgp_df.to_html(escape=False, index=False)}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
         
 else:  # About page
     st.title("About DNABERT-Enhancer portal")
