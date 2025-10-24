@@ -207,7 +207,7 @@ if page == "📊 Browse Data":
             ]
 
             
-            st.markdown(f"**{len(filtered_df):,} variants displayed**")
+            st.markdown(f"**{len(filtered_df['ID']):,} variants displayed**")
 
         with col2:
     		# --- Search Bar and Clear Button ---
