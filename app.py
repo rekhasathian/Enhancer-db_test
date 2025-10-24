@@ -287,7 +287,7 @@ if page == "📊 Browse Data":
         
         st.header("Enhancers in Human Genome")
         
-        st.dataframe(combined_wgp_df, use_container_width=True, height=500, hide_index=True)
+        st.dataframe(combined_wgp_df.head(50), use_container_width=True, height=500, hide_index=True)
         
 else:  # About page
     st.title("About DNABERT-Enhancer portal")
