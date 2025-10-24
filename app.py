@@ -206,8 +206,11 @@ if page == "📊 Browse Data":
                 (filtered_df["LogOddRatio"] <= max_lor_val)
             ]
 
-            
-            st.markdown(f"**{filtered_df['ID'].nunique():,} variants displayed**")
+            unique_key_cols = ["chromosome", "variant_start", "variant_end", "reference_nucleotide", "alternative_nucleotide"]
+
+            # Count unique rows based on these columns
+            num_unique_variants = len(filtered_df.drop_duplicates(subset=unique_key_cols))
+            st.markdown(f"**{num_unique_variants:,} variants displayed**")
 
         with col2:
     		# --- Search Bar and Clear Button ---
