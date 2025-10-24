@@ -57,17 +57,13 @@ st.markdown("""
 # Load data function
 @st.cache_data
 def load_data():
-    datasets = {
-        'Enhancer GOF': pd.read_csv('./data/Enhancer_GOF_updated.csv'),
-        'Enhancer LOF': pd.read_csv('./data/Enhancer_LOF_updated.csv'),
-        'Non-enhancer GOF': pd.read_csv('./data/Non-enhancer_GOF_updated.csv')
-    }
     detail_datasets = {
         'Enhancer GOF': pd.read_csv('./data/Detailed_info_enhancer_GOF.csv'),
         'Enhancer LOF': pd.read_csv('./data/Detailed_info_enhancer_LOF.csv'),
         'Non-enhancer GOF': pd.read_csv('./data/Detailed_info_non-enhancer_GOF.csv')
     }
-    return datasets,detail_datasets
+    combined_df = pd.concat(detail_datasets.values(), ignore_index=True)
+    return combined_df
     
 
 # Sidebar
@@ -98,16 +94,14 @@ if page == "📊 Browse Data":
     with tab1:
         st.header("Candidate Variants predicted by DNABERT-Enhancer")
         
-        datasets, detail_datasets = load_data()
-        combined_df = pd.concat(datasets.values(), ignore_index=True)
-        combined_df.insert(0, "ID", [f"cv{i+1:06d}" for i in range(len(combined_df))])
+        combined_df = load_data()
 
         columns_order = [
-            "ID", "chromosome", "region_coordinates", "dbsnp_id",
-            "variant_start", "variant_end", "reference_nucleotide", "alternative_nucleotide",
-            "reference_probability", "alternative_probability", "ScoreChange", "LogOddRatio",
-            "reported_clinical_association", "gwas_url", "clinvar_url", "eqtl_url",
-            "predicted_functional_effect", "class"
+            "ID","chromosome","region_coordinates","dbsnp_id","variant_start","variant_end","reference_nucleotide",
+            "alternative_nucleotide","reference_probability","alternative_probability","ScoreChange","LogOddRatio",
+            "reported_clinical_association","gwas_url,clinvar_url","eqtl_url","predicted_functional_effect","class",
+            "transcription_factor","tf_reference_probability","tf_alternative_probability","tf_ScoreChange","tf_LogOddRatio",
+            "gene","strand","distance","element_coordinates","variant_coordinates"
         ]
         combined_df = combined_df[columns_order]
 
@@ -250,55 +244,6 @@ if page == "📊 Browse Data":
             st.markdown("### Candidate Variants Table")
             st.dataframe(filtered_display_df[display_cols], use_container_width=True, height=500, hide_index=True)
 
-            # --- Variant Details Section below table ---
-            st.markdown("---")
-            st.subheader("Variant Details")
-
-            selected_variant_id = st.selectbox(
-                "Select Candidate Variant ID to see details",
-                options=filtered_display_df["ID"].unique()
-            )
-
-            if selected_variant_id:
-                row = combined_df[combined_df["ID"] == selected_variant_id].iloc[0]
-                variant_class = row["class"]
-                details_df = detail_datasets.get(variant_class)
-
-                if details_df is not None:
-                    variant_data = details_df[details_df["ID"] == selected_variant_id]
-                    if not variant_data.empty:
-                        vrow = variant_data.iloc[0]
-                
-                        colA, colB = st.columns(2)
-                        with colA:
-                            st.write("**Candidate Variant ID:**", vrow.get("ID", "N/A"))
-                            st.write("**Genomic Element Class:**", vrow.get("class", "N/A"))
-                            st.write("**Organism:**", "Human")
-                            st.write("**Genome Assembly:**", "GRCh38")
-                        with colB:
-                            st.write("**Element Coordinate:**", vrow.get("element_coordinates", "N/A"))
-                            st.write("**Closest Gene:**", vrow.get("gene", "N/A"))
-                            st.write("**Strand:**", vrow.get("strand", "N/A"))
-                            st.write("**Distance:**", vrow.get("distance", "N/A"))
-
-                        # LOF TF info
-                        if row["predicted_functional_effect"] == "Loss of function":
-                            tf_cols = ["transcription_factor", "tf_reference_probability",
-                                       "tf_alternative_probability", "tf_ScoreChange", "tf_LogOddRatio"]
-                            st.markdown("#### Transcription Factor Impact")
-                            st.dataframe(variant_data[tf_cols], use_container_width=True)
-
-                        # General probability & effect metrics
-                        prob_cols = ["reference_probability", "alternative_probability",
-                                     "ScoreChange", "LogOddRatio", "predicted_functional_effect"]
-                        st.markdown("#### Probability & Effect Metrics")
-                        st.dataframe(variant_data[prob_cols], use_container_width=True)
-
-                    else:
-                        st.warning(f"No detailed record found for {selected_variant_id}")
-                else:
-                    st.warning(f"No details file configured for class: {variant_class}")
-
             # --- Download option ---
             csv = filtered_display_df.to_csv(index=False).encode('utf-8')
             st.download_button(
@@ -307,6 +252,7 @@ if page == "📊 Browse Data":
                 file_name="filtered_candidate_variants.csv",
                 mime="text/csv"
             )
+        
 
                 
     with tab2:
