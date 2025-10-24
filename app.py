@@ -285,10 +285,24 @@ if page == "📊 Browse Data":
         df_list = [pd.read_csv(f) for f in all_files]
         combined_wgp_df = pd.concat(df_list, ignore_index=True)
         
-        st.header("Enhancers in Human Genome")
+        st.markdown(
+            """
+            <h1 style="font-size:20px; font-weight:bold; color:#1f2937;">
+                Enhancer regions predicted by DNABERT-Enhancer in human genome
+            </h1>
+            """,
+            unsafe_allow_html=True
+        )
         col1, col2 = st.columns([1, 2], gap="large")
         with col1:
-            st.subheader("Filter data")
+            st.markdown(
+            """
+            <h1 style="font-size:18px; font-weight:bold; color:#1f2937;">
+                Filter data
+            </h1>
+            """,
+            unsafe_allow_html=True
+        )
             
             # Initialize persistent states
             if "filter_key_tab2" not in st.session_state:
