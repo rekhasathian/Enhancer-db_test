@@ -291,14 +291,14 @@ if page == "📊 Browse Data":
             st.subheader("Filter data")
             
             # Initialize persistent states
-            if "filter_key" not in st.session_state:
-                st.session_state.filter_key = 0
+            if "filter_key_tab2" not in st.session_state:
+                st.session_state.filter_key_tab2 = 0
 
             chrom_options = ["All"] + sorted(combined_wgp_df["chromosome"].dropna().unique())
             selected_chrom = st.selectbox(
                 "Chromosome",
                 chrom_options,
-                key=f"chrom_{st.session_state.filter_key}"
+                key=f"tab2_chrom_{st.session_state.filter_key_tab2}"
             )
             
             filtered_df = combined_wgp_df.copy()
@@ -306,7 +306,7 @@ if page == "📊 Browse Data":
                 filtered_df = filtered_df[filtered_df["chromosome"] == selected_chrom]
             # Reset filters
             if st.button("🔄 Reset Filters"):
-                st.session_state.filter_key += 1
+                st.session_state.filter_key_tab2 += 1
                 st.rerun()
 
         with col2:
