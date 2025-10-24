@@ -206,7 +206,7 @@ if page == "📊 Browse Data":
                 (filtered_df["LogOddRatio"] <= max_lor_val)
             ]
 
-            unique_key_cols = ["chromosome", "variant_start", "variant_end", "reference_nucleotide", "alternative_nucleotide"]
+            unique_key_cols = ["chromosome", "dbsnp_id", "variant_start", "variant_end", "reference_nucleotide", "alternative_nucleotide"]
 
             # Count unique rows based on these columns
             num_unique_variants = len(filtered_df.drop_duplicates(subset=unique_key_cols))
