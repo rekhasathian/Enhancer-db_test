@@ -68,7 +68,7 @@ def load_data():
     return combined_df
     
 # Load and combine all split files
-data_path = "data/"  # change to the folder where your CSVs are
+data_path = "./data/whole_genome_prediction_data/"  # change to the folder where your CSVs are
 all_files = sorted(glob.glob(os.path.join(data_path, "WGP_*.csv")))
 # Combine all parts into one DataFrame
 df_list = [pd.read_csv(f) for f in all_files]
