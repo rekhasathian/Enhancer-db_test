@@ -300,18 +300,17 @@ if page == "📊 Browse Data":
                 chrom_options,
                 key=f"chrom_{st.session_state.filter_key}"
             )
-            # Reset filters
-            if st.button("🔄 Reset Filters"):
-                st.session_state.filter_key += 1
-                st.session_state.lor_range = (float(min_lor), float(max_lor))
-                st.rerun()
-
+            
             filtered_df = combined_wgp_df.copy()
             if selected_chrom != "All":
                 filtered_df = filtered_df[filtered_df["chromosome"] == selected_chrom]
+            # Reset filters
+            if st.button("🔄 Reset Filters"):
+                st.session_state.filter_key += 1
+                st.rerun()
 
         with col2:
-            st.dataframe(combined_wgp_df.head(50), use_container_width=True, height=500, hide_index=True)
+            st.dataframe(filtered_df.head(50), use_container_width=True, height=500, hide_index=True)
 
             # Download option
             csv = filtered_df.to_csv(index=False).encode('utf-8')
