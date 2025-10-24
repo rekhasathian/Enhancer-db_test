@@ -92,7 +92,14 @@ if page == "📊 Browse Data":
 
     tab1, tab2 = st.tabs(["Candidate Variants", "Enhancers in Human Genome"])
     with tab1:
-        st.header("Candidate Variants predicted by DNABERT-Enhancer")
+        st.markdown(
+            """
+            <h1 style="font-size:20px; font-weight:bold; color:#1f2937;">
+                Filter data
+            </h1>
+            """,
+            unsafe_allow_html=True
+        )
         
         combined_df = load_data()
         # st.write("Columns in combined_df:", combined_df.columns.tolist())
@@ -241,7 +248,6 @@ if page == "📊 Browse Data":
                     ).any(axis=1)
                 ]
 
-            st.markdown("### Candidate Variants Table")
             st.dataframe(filtered_display_df[display_cols], use_container_width=True, height=500, hide_index=True)
 
             # --- Download option ---
