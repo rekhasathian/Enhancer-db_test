@@ -67,12 +67,6 @@ def load_data():
     combined_df = pd.concat(detail_datasets.values(), ignore_index=True)
     return combined_df
     
-# Load and combine all split files
-data_path = "./data/whole_genome_prediction_data/"  # change to the folder where your CSVs are
-all_files = sorted(glob.glob(os.path.join(data_path, "WGP_*.csv")))
-# Combine all parts into one DataFrame
-df_list = [pd.read_csv(f) for f in all_files]
-combined_wgp_df = pd.concat(df_list, ignore_index=True)
 
 # Sidebar
 with st.sidebar:
@@ -284,7 +278,15 @@ if page == "📊 Browse Data":
             )
                 
     with tab2:
+        # Load and combine all split files
+        data_path = "./data/whole_genome_prediction_data/"  # change to the folder where your CSVs are
+        all_files = sorted(glob.glob(os.path.join(data_path, "WGP_*.csv")))
+        # Combine all parts into one DataFrame
+        df_list = [pd.read_csv(f) for f in all_files]
+        combined_wgp_df = pd.concat(df_list, ignore_index=True)
+        
         st.header("Enhancers in Human Genome")
+        
         st.dataframe(combined_wgp_df, use_container_width=True, height=500, hide_index=True)
         
 else:  # About page
