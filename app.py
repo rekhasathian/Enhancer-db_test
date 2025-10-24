@@ -86,16 +86,13 @@ with st.sidebar:
 if page == "📊 Browse Data":
     # Header
     st.title("DNABERT-Enhancer prediction data")
-    st.markdown("""
-    Browse through the data using the tabs
-    """)
 
     tab1, tab2 = st.tabs(["Candidate Variants", "Enhancers in Human Genome"])
     with tab1:
         st.markdown(
             """
             <h1 style="font-size:20px; font-weight:bold; color:#1f2937;">
-                Filter data
+                Candidate Variants predicted by DNABERT-Enhancer
             </h1>
             """,
             unsafe_allow_html=True
