@@ -220,7 +220,9 @@ if page == "📊 Browse Data":
 
             if "search_query" not in st.session_state:
                 st.session_state.search_query = ""
-
+            if "selected_variant" not in st.session_state:
+                st.session_state.selected_variant = None
+            
             with search_col:
                 search_query = st.text_input(
                     "🔍 Search Variants",
@@ -255,18 +257,37 @@ if page == "📊 Browse Data":
             # st.dataframe(filtered_display_df[display_cols], use_container_width=True, height=500, hide_index=True)
 
             # --- Make ID clickable ---
-            filtered_display_df = filtered_display_df.copy()
             filtered_display_df["ID"] = filtered_display_df["ID"].apply(
-                lambda x: f'<a href="?variant={x}" target="_self">{x}</a>'
+                lambda x: f'<a href="#" onclick="window.parent.postMessage({{type: \'select_variant\', value: \'{x}\' }}, \'*\')">{x}</a>'
             )
 
             # --- Display the interactive table ---
             st.markdown(
                 """
-                <div style="overflow-x:auto; height:500px;">
-                """ + filtered_display_df.to_html(escape=False, index=False) + "</div>",
+                <script>
+                window.addEventListener('message', (event) => {
+                    if (event.data && event.data.type === 'select_variant') {
+                        const variant = event.data.value;
+                        const params = new URLSearchParams(window.location.search);
+                        params.set('variant', variant);
+                        window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
+                        window.parent.postMessage({type: 'streamlit:setQueryParams', params: Object.fromEntries(params)}, '*');
+                    }
+                });
+                </script>
+                """,
                 unsafe_allow_html=True
             )
+
+            st.markdown(
+                f"""
+                <div style="overflow-x:auto; height:500px;">
+                    {filtered_display_df.to_html(escape=False, index=False)}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
             # --- Download option ---
             csv = filtered_display_df.to_csv(index=False).encode('utf-8')
             st.download_button(
@@ -278,14 +299,7 @@ if page == "📊 Browse Data":
             
         # --- Detect clicked variant from query params ---
         st.markdown("---")
-        st.markdown(
-            """
-            <h1 style="font-size:20px; font-weight:bold; color:#1f2937;">
-                Detailed information on candidate variants
-            </h1>
-            """,
-            unsafe_allow_html=True
-        )
+        
         query_params = st.query_params
         if "variant" in query_params:
             selected_variant_id = query_params["variant"][0] if isinstance(query_params["variant"], list) else query_params["variant"]
