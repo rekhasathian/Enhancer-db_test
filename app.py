@@ -254,6 +254,26 @@ if page == "📊 Browse Data":
 
             st.dataframe(filtered_display_df[display_cols], use_container_width=True, height=500, hide_index=True)
 
+            # Make ID clickable in HTML
+            filtered_display_df["View Details"] = filtered_display_df["ID"].apply(
+                lambda x: f'<a href="?variant={x}" target="_self">{x}</a>'
+            )
+
+            st.markdown(
+                filtered_display_df.to_html(escape=False, index=False),
+                unsafe_allow_html=True
+            )
+
+            # --- Detect if a variant is selected from query params ---
+            query_params = st.query_params
+            if "variant" in query_params:
+                selected_variant_id = query_params["variant"][0] if isinstance(query_params["variant"], list) else query_params["variant"]
+
+                detailed_info = combined_df[combined_df["ID"] == selected_variant_id]
+                if not detailed_info.empty:
+                    st.markdown(f"### 🧬 Detailed information for variant: {selected_variant_id}")
+                    st.dataframe(detailed_info.T.rename(columns={0: "Value"}), use_container_width=True)
+
             # --- Download option ---
             csv = filtered_display_df.to_csv(index=False).encode('utf-8')
             st.download_button(
@@ -263,19 +283,19 @@ if page == "📊 Browse Data":
                 mime="text/csv"
             )
         
-        st.markdown("---")
-        st.markdown(
-            """
-            <h1 style="font-size:20px; font-weight:bold; color:#1f2937;">
-                Detailed information on candidate variants
-            </h1>
-            """,
-            unsafe_allow_html=True
-        )
-        selected_variant_id = st.selectbox(
-                "Select Candidate Variant ID to see details",
-                options=filtered_display_df["ID"].unique()
-            )
+        # st.markdown("---")
+        # st.markdown(
+        #     """
+        #     <h1 style="font-size:20px; font-weight:bold; color:#1f2937;">
+        #         Detailed information on candidate variants
+        #     </h1>
+        #     """,
+        #     unsafe_allow_html=True
+        # )
+        # selected_variant_id = st.selectbox(
+        #         "Select Candidate Variant ID to see details",
+        #         options=filtered_display_df["ID"].unique()
+        #     )
                 
     with tab2:
         # Load and combine all split files
