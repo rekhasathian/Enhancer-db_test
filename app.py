@@ -276,33 +276,26 @@ if page == "📊 Browse Data":
                 mime="text/csv"
             )
             
-            # --- Detect clicked variant from query params ---
-            query_params = st.query_params
-            if "variant" in query_params:
-                selected_variant_id = query_params["variant"][0] if isinstance(query_params["variant"], list) else query_params["variant"]
+        # --- Detect clicked variant from query params ---
+        st.markdown("---")
+        st.markdown(
+            """
+            <h1 style="font-size:20px; font-weight:bold; color:#1f2937;">
+                Detailed information on candidate variants
+            </h1>
+            """,
+            unsafe_allow_html=True
+        )
+        query_params = st.query_params
+        if "variant" in query_params:
+            selected_variant_id = query_params["variant"][0] if isinstance(query_params["variant"], list) else query_params["variant"]
 
-                detailed_info = combined_df[combined_df["ID"] == selected_variant_id]
-                if not detailed_info.empty:
-                    st.markdown(f"### 🧬 Detailed information for variant: {selected_variant_id}")
-                    st.dataframe(detailed_info.T.rename(columns={0: "Value"}), use_container_width=True)
+            detailed_info = combined_df[combined_df["ID"] == selected_variant_id]
+            if not detailed_info.empty:
+                st.markdown(f"### 🧬 Detailed information for variant: {selected_variant_id}")
+                st.dataframe(detailed_info.T.rename(columns={0: "Value"}), use_container_width=True)
 
-
-            
-        
-        # st.markdown("---")
-        # st.markdown(
-        #     """
-        #     <h1 style="font-size:20px; font-weight:bold; color:#1f2937;">
-        #         Detailed information on candidate variants
-        #     </h1>
-        #     """,
-        #     unsafe_allow_html=True
-        # )
-        # selected_variant_id = st.selectbox(
-        #         "Select Candidate Variant ID to see details",
-        #         options=filtered_display_df["ID"].unique()
-        #     )
-                
+              
     with tab2:
         # Load and combine all split files
         data_path = "./data/whole_genome_prediction_data/"  # change to the folder where your CSVs are
