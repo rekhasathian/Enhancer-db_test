@@ -267,7 +267,15 @@ if page == "📊 Browse Data":
                 """ + filtered_display_df.to_html(escape=False, index=False) + "</div>",
                 unsafe_allow_html=True
             )
-
+            # --- Download option ---
+            csv = filtered_display_df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="📥 Download Filtered Variants (CSV)",
+                data=csv,
+                file_name="filtered_candidate_variants.csv",
+                mime="text/csv"
+            )
+            
             # --- Detect clicked variant from query params ---
             query_params = st.query_params
             if "variant" in query_params:
@@ -279,14 +287,7 @@ if page == "📊 Browse Data":
                     st.dataframe(detailed_info.T.rename(columns={0: "Value"}), use_container_width=True)
 
 
-            # --- Download option ---
-            csv = filtered_display_df.to_csv(index=False).encode('utf-8')
-            st.download_button(
-                label="📥 Download Filtered Variants (CSV)",
-                data=csv,
-                file_name="filtered_candidate_variants.csv",
-                mime="text/csv"
-            )
+            
         
         # st.markdown("---")
         # st.markdown(
