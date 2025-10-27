@@ -71,50 +71,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- Optimize table display for speed ---
-max_rows = 50  # number of rows to display (you can make it a user option too)
-
-# Apply all filters/search as before
-# filtered_display_df = <your existing filtered dataframe>
-
-# Limit display but keep all filter logic intact
-display_subset = filtered_display_df.head(max_rows)
-
-st.markdown("""
-<style>
-.scroll-table-container {
-    max-height: 500px;
-    overflow-y: auto;
-    overflow-x: auto;
-    border-bottom: 2px solid #ddd;
-    background-color: #ffffff;
-    border-radius: 6px;
-}
-.scroll-table-container table {
-    border-collapse: collapse;
-    width: 100%;
-    font-size: 13px;
-}
-.scroll-table-container thead th {
-    position: sticky;
-    top: 0;
-    background-color: #f3f6fa;
-    color: #333;
-    font-weight: 600;
-    border-bottom: 2px solid #ccc;
-    text-align: left;
-    z-index: 2;
-}
-.scroll-table-container th, .scroll-table-container td {
-    padding: 6px 10px;
-    border-bottom: 1px solid #e6e6e6;
-}
-.scroll-table-container tr:nth-child(even) {
-    background-color: #fafafa;
-}
-</style>
-""", unsafe_allow_html=True)
-
 # Load data function
 @st.cache_data
 def load_data():
@@ -348,6 +304,50 @@ if page == "📊 Browse Data":
                     lambda x: f'<a href="?variant={x}" target="_self" style="color:#0073e6; text-decoration:none;">{x}</a>'
                 )
 
+            # --- Optimize table display for speed ---
+            max_rows = 50  # number of rows to display (you can make it a user option too)
+
+            # Apply all filters/search as before
+            # filtered_display_df = <your existing filtered dataframe>
+
+            # Limit display but keep all filter logic intact
+            display_subset = filtered_display_df.head(max_rows)
+
+            st.markdown("""
+            <style>
+            .scroll-table-container {
+                max-height: 500px;
+                overflow-y: auto;
+                overflow-x: auto;
+                border-bottom: 2px solid #ddd;
+                background-color: #ffffff;
+                border-radius: 6px;
+            }
+            .scroll-table-container table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 13px;
+            }
+            .scroll-table-container thead th {
+                position: sticky;
+                top: 0;
+                background-color: #f3f6fa;
+                color: #333;
+                font-weight: 600;
+                border-bottom: 2px solid #ccc;
+                text-align: left;
+                z-index: 2;
+            }
+            .scroll-table-container th, .scroll-table-container td {
+                padding: 6px 10px;
+                border-bottom: 1px solid #e6e6e6;
+            }
+            .scroll-table-container tr:nth-child(even) {
+            background-color: #fafafa;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+            
             st.markdown(
                 f"""
                 <div class="scroll-table-container">
