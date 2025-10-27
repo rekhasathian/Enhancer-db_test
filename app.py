@@ -272,6 +272,23 @@ if page == "📊 Browse Data":
                 unsafe_allow_html=True
             )
 
+            # --- JS to prevent reload on click ---
+            st.markdown(
+                """
+                <script>
+                document.addEventListener('click', function(event) {
+                    const link = event.target.closest('a[href^="?variant="]');
+                    if (link) {
+                        event.preventDefault();  // stop full reload
+                        const urlParams = new URLSearchParams(link.getAttribute('href').substring(1));
+                        const variant = urlParams.get('variant');
+                        window.parent.postMessage({ type: 'streamlit:setQueryParams', params: { variant } }, '*');
+                    }
+                });
+                </script>
+                """,
+                unsafe_allow_html=True
+            )
             # --- Download option ---
             csv = filtered_display_df.to_csv(index=False).encode('utf-8')
             st.download_button(
