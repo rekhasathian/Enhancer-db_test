@@ -66,6 +66,19 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+/* Adjust space between sidebar and main content */
+section[data-testid="stSidebar"] {
+    padding-right: 1rem !important;  /* increase to add more gap */
+}
+
+div[data-testid="stVerticalBlock"] > div:first-child {
+    margin-left: 1.5rem !important;  /* shifts main content slightly right */
+}
+</style>
+""", unsafe_allow_html=True)
+
 # Load data function
 @st.cache_data
 def load_data():
