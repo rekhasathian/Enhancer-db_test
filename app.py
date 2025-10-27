@@ -71,21 +71,46 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# --- Display the interactive table (enhanced HTML rendering) ---
 st.markdown("""
 <style>
-/* Reduce table font size (affects all tables) */
-table {
-    font-size: 13px !important;   /* adjust 12–14px for readability */
+.scroll-table-container {
+    max-height: 500px;           /* adjust height as needed */
+    overflow-y: auto;
+    overflow-x: auto;
+    border-bottom: 2px solid #ddd;
+    background-color: #ffffff;
+    border-radius: 6px;
 }
 
-/* Optional: compact table cell spacing */
-th, td {
-    padding: 4px 8px !important;
+/* Table styling */
+.scroll-table-container table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 13px;
 }
 
-/* Optional: make header slightly bolder */
-th {
-    font-weight: 600 !important;
+/* Header */
+.scroll-table-container thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f3f6fa;   /* header color */
+    color: #333;
+    font-weight: 600;
+    border-bottom: 2px solid #ccc;
+    text-align: left;
+    z-index: 2;
+}
+
+/* Cell spacing and border */
+.scroll-table-container th, .scroll-table-container td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+/* Zebra stripe (optional) */
+.scroll-table-container tr:nth-child(even) {
+    background-color: #fafafa;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -323,10 +348,10 @@ if page == "📊 Browse Data":
                     lambda x: f'<a href="?variant={x}" target="_self" style="color:#0073e6; text-decoration:none;">{x}</a>'
                 )
 
-            # --- Display the interactive table (fast HTML rendering) ---
+            # Apply custom scrollable table container
             st.markdown(
                 f"""
-                <div style="overflow-x:auto; height:500px;">
+                <div class="scroll-table-container">
                     {filtered_display_df.to_html(escape=False, index=False)}
                 </div>
                 """,
