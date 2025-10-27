@@ -53,7 +53,12 @@ st.markdown("""
         font-size: 0.85rem;
         font-weight: 600;
     }
-    .stTabs [data-testid="stWaiver"] button {
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+.stTabs [data-testid="stWaiver"] button {
         font-size: 16px;
         font-weight: 700;
         color: #3182CE;
