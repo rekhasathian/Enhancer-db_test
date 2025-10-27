@@ -70,11 +70,11 @@ st.markdown("""
 <style>
 /* Adjust space between sidebar and main content */
 section[data-testid="stSidebar"] {
-    padding-right: 0.5rem !important;  /* increase to add more gap */
+    padding-right: 0.1rem !important;  /* increase to add more gap */
 }
 
 div[data-testid="stVerticalBlock"] > div:first-child {
-    margin-left: 1rem !important;  /* shifts main content slightly right */
+    margin-left: 0.5rem !important;  /* shifts main content slightly right */
 }
 </style>
 """, unsafe_allow_html=True)
