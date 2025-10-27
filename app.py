@@ -396,7 +396,7 @@ if page == "📊 Browse Data":
             """,
             unsafe_allow_html=True
         )
-        col1, col2 = st.columns([1, 2], gap="large")
+        col1, col2 = st.columns([1, 4], gap="medium")
         with col1:
             st.markdown(
             """
