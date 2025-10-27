@@ -256,37 +256,16 @@ if page == "📊 Browse Data":
 
             # st.dataframe(filtered_display_df[display_cols], use_container_width=True, height=500, hide_index=True)
 
-            # --- Make ID clickable ---
-            filtered_display_df["ID"] = filtered_display_df["ID"].apply(
-                lambda x: f'<a href="#" onclick="window.parent.postMessage({{type: \'select_variant\', value: \'{x}\' }}, \'*\')">{x}</a>'
-            )
-
-            # --- Display the interactive table ---
-            st.markdown(
-                """
-                <script>
-                window.addEventListener('message', (event) => {
-                    if (event.data && event.data.type === 'select_variant') {
-                        const variant = event.data.value;
-                        const params = new URLSearchParams(window.location.search);
-                        params.set('variant', variant);
-                        window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
-                        window.parent.postMessage({type: 'streamlit:setQueryParams', params: Object.fromEntries(params)}, '*');
-                    }
-                });
-                </script>
-                """,
-                unsafe_allow_html=True
-            )
-
-            st.markdown(
-                f"""
-                <div style="overflow-x:auto; height:500px;">
-                    {filtered_display_df.to_html(escape=False, index=False)}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            # --- Create clickable ID column (using Streamlit buttons, not HTML) ---
+            for _, row in filtered_display_df.iterrows():
+                cols = st.columns(len(display_cols))
+                for i, col_name in enumerate(display_cols):
+                    if col_name == "ID":
+                        if cols[i].button(f"{row['ID']}", key=f"view_{row['ID']}"):
+                            st.session_state.selected_variant = row['ID']
+                    else:
+                        cols[i].write(row[col_name])
+                st.markdown("---")
 
             # --- Download option ---
             csv = filtered_display_df.to_csv(index=False).encode('utf-8')
@@ -297,16 +276,21 @@ if page == "📊 Browse Data":
                 mime="text/csv"
             )
             
-        # --- Detect clicked variant from query params ---
-        st.markdown("---")
-        
-        query_params = st.query_params
-        if "variant" in query_params:
-            selected_variant_id = query_params["variant"][0] if isinstance(query_params["variant"], list) else query_params["variant"]
+        # --- Detailed info panel ---
+        if st.session_state.selected_variant:
+            selected_variant_id = st.session_state.selected_variant
+            st.markdown("---")
+            st.markdown(
+                f"""
+                <h1 style="font-size:20px; font-weight:bold; color:#1f2937;">
+                    🧬 Detailed information for variant: {selected_variant_id}
+                </h1>
+                """,
+                unsafe_allow_html=True
+            )
 
             detailed_info = combined_df[combined_df["ID"] == selected_variant_id]
             if not detailed_info.empty:
-                st.markdown(f"### 🧬 Detailed information for variant: {selected_variant_id}")
                 st.dataframe(detailed_info.T.rename(columns={0: "Value"}), use_container_width=True)
 
               
