@@ -63,6 +63,8 @@ st.markdown("""
         color: #085D9E;
         border-bottom: 2px solid #085D9E;
     }
+</style>
+""", unsafe_allow_html=True)
 
 # Load data function
 @st.cache_data
