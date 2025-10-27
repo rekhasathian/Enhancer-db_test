@@ -71,44 +71,44 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- Display the interactive table (enhanced HTML rendering) ---
+# --- Optimize table display for speed ---
+max_rows = 50  # number of rows to display (you can make it a user option too)
+
+# Apply all filters/search as before
+# filtered_display_df = <your existing filtered dataframe>
+
+# Limit display but keep all filter logic intact
+display_subset = filtered_display_df.head(max_rows)
+
 st.markdown("""
 <style>
 .scroll-table-container {
-    max-height: 500px;           /* adjust height as needed */
+    max-height: 500px;
     overflow-y: auto;
     overflow-x: auto;
     border-bottom: 2px solid #ddd;
     background-color: #ffffff;
     border-radius: 6px;
 }
-
-/* Table styling */
 .scroll-table-container table {
     border-collapse: collapse;
     width: 100%;
     font-size: 13px;
 }
-
-/* Header */
 .scroll-table-container thead th {
     position: sticky;
     top: 0;
-    background-color: #f3f6fa;   /* header color */
+    background-color: #f3f6fa;
     color: #333;
     font-weight: 600;
     border-bottom: 2px solid #ccc;
     text-align: left;
     z-index: 2;
 }
-
-/* Cell spacing and border */
 .scroll-table-container th, .scroll-table-container td {
     padding: 6px 10px;
     border-bottom: 1px solid #e6e6e6;
 }
-
-/* Zebra stripe (optional) */
 .scroll-table-container tr:nth-child(even) {
     background-color: #fafafa;
 }
@@ -348,15 +348,18 @@ if page == "📊 Browse Data":
                     lambda x: f'<a href="?variant={x}" target="_self" style="color:#0073e6; text-decoration:none;">{x}</a>'
                 )
 
-            # Apply custom scrollable table container
             st.markdown(
-                f"""
-                <div class="scroll-table-container">
-                    {filtered_display_df.to_html(escape=False, index=False)}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            f"""
+            <div class="scroll-table-container">
+                {display_subset.to_html(escape=False, index=False)}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        # --- Optional: Show row count info ---
+        st.caption(f"Showing top {len(display_subset):,} of {len(filtered_display_df):,} matching rows.")
+
 
             # small JS: intercept clicks on ?variant links and update query params w/o full reload
             st.markdown(
