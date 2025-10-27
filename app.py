@@ -124,7 +124,7 @@ if page == "📊 Browse Data":
         ]
         # ensure columns exist before reordering
         combined_df = combined_df[[c for c in columns_order if c in combined_df.columns]]
-        col1, col2 = st.columns([1, 3], gap="medium")
+        col1, col2 = st.columns([1, 4], gap="medium")
 
         with col1:
             st.markdown(
