@@ -349,16 +349,16 @@ if page == "📊 Browse Data":
                 )
 
             st.markdown(
-            f"""
-            <div class="scroll-table-container">
-                {display_subset.to_html(escape=False, index=False)}
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+                f"""
+                <div class="scroll-table-container">
+                    {display_subset.to_html(escape=False, index=False)}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-        # --- Optional: Show row count info ---
-        st.caption(f"Showing top {len(display_subset):,} of {len(filtered_display_df):,} matching rows.")
+            # --- Optional: Show row count info ---
+            st.caption(f"Showing top {len(display_subset):,} of {len(filtered_display_df):,} matching rows.")
 
 
             # small JS: intercept clicks on ?variant links and update query params w/o full reload
