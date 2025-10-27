@@ -63,21 +63,6 @@ st.markdown("""
         color: #085D9E;
         border-bottom: 2px solid #085D9E;
     }
-</style>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<style>
-/* Adjust space between sidebar and main content */
-section[data-testid="stSidebar"] {
-    padding-right: 0.005rem !important;  /* increase to add more gap */
-}
-
-div[data-testid="stVerticalBlock"] > div:first-child {
-    margin-left: 0.1rem !important;  /* shifts main content slightly right */
-}
-</style>
-""", unsafe_allow_html=True)
 
 # Load data function
 @st.cache_data
