@@ -71,6 +71,25 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+/* Reduce table font size (affects all tables) */
+table {
+    font-size: 13px !important;   /* adjust 12–14px for readability */
+}
+
+/* Optional: compact table cell spacing */
+th, td {
+    padding: 4px 8px !important;
+}
+
+/* Optional: make header slightly bolder */
+th {
+    font-weight: 600 !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # Load data function
 @st.cache_data
 def load_data():
