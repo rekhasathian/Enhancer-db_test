@@ -397,8 +397,9 @@ if page == "📊 Browse Data":
         if "variant" in query_params_now:
             selected_variant_id = query_params_now["variant"][0] if isinstance(query_params_now["variant"], list) else query_params_now["variant"]
             detailed_info = combined_df[combined_df["ID"] == selected_variant_id]
+            
             if not detailed_info.empty:
-                row = detailed_info.iloc[0].to_dict()
+                row = detailed_info.iloc[0]
                 rowd = row.to_dict()
 
                 # helper to try multiple possible column name variants
