@@ -438,7 +438,7 @@ if page == "📊 Browse Data":
                         **Reference probability:** {pick('reference_probability')}  
                         **Alternative probability:** {pick('alternative_probability')}  
                         **ScoreChange:** {pick('ScoreChange')}  
-                        **LodOddsRatio:** {pick('LodOddsRatio')}  
+                        **LogOddRatio:** {pick('LogOddRatio')}  
                         """,
                         unsafe_allow_html=True,
                     )
