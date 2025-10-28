@@ -403,12 +403,12 @@ if page == "📊 Browse Data":
                 with st.expander("🪪 Basic Information", expanded=True):
                     st.markdown(
                     f"""
-            **Candidate Variant ID:** {row['ID']}  
-            **Genomic Element Class:** {row.get('class', 'N/A')}  
-            **Organism:** {'Human'}  
-            **Genome Assembly:** {'GRCh38'}
-            """,
-                unsafe_allow_html=True,
+                    **Candidate Variant ID:** {row.get['ID']}  
+                    **Genomic Element Class:** {row.get('class', 'N/A')}  
+                    **Organism:** {'Human'}  
+                    **Genome Assembly:** {'GRCh38'}
+                    """,
+                    unsafe_allow_html=True,
                 )
 
     with tab2:
