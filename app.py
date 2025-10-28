@@ -413,14 +413,14 @@ if page == "📊 Browse Data":
                 
                 with st.expander("🪪 Basic Information", expanded=True):
                     st.markdown(
-                        f"""**Candidate Variant ID:** {pick('ID')}
+                        f"""**Candidate Variant ID:** {pick('ID')}  
                         **Genomic Element Class:** {pick('class')}  
                         **Organism:** {'Human'}  
-                        **Genome Assembly:** {'GRCh38'}
-                        **Element coordinate:** {pick('element_coordinates')}
-                        **Closest gene:** {pick('gene')}
-                        **Strand:** {pick('strand')}
-                        **Distance to element:** {pick('distance')}
+                        **Genome Assembly:** {'GRCh38'}  
+                        **Element coordinate:** {pick('element_coordinates')}  
+                        **Closest gene:** {pick('gene')}  
+                        **Strand:** {pick('strand')}  
+                        **Distance to element:** {pick('distance')}  
                         """,
                         unsafe_allow_html=True,
                     )
