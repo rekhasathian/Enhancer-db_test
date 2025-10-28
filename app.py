@@ -391,57 +391,107 @@ if page == "📊 Browse Data":
         
         # --- Detailed info section (below the table) ---
         st.markdown("---")
-        
-        # read query params again (they may have been updated by the JS)
-        query_params_now = st.experimental_get_query_params()
-        if "variant" in query_params_now:
-            selected_variant_id = query_params_now["variant"][0] if isinstance(query_params_now["variant"], list) else query_params_now["variant"]
-            detailed_info = combined_df[combined_df["ID"] == selected_variant_id]
-            
-            if not detailed_info.empty:
-                row = detailed_info.iloc[0]
-                rowd = row.to_dict()
+        st.markdown(
+            f"<h3 style='font-size:22px; font-weight:700;'>🧬 Detailed information for variant: {selected_variant_id}</h3>",
+            unsafe_allow_html=True,
+        )
 
-                # helper to try multiple possible column name variants
-                def pick(*keys, default="N/A"):
-                    for k in keys:
-                        if k in rowd and pd.notna(rowd[k]):
-                            return rowd[k]
-                    return default
-                
-                st.markdown(f"### 🧬 Detailed information for variant: {selected_variant_id}")
+        row = detailed_info.iloc[0]
+        rowd = row.to_dict()
 
-                with st.expander("📃 Basic Information", expanded=True):
-                    gene_id = pick('gene')
-                    ensembl_link = f"https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={gene_id}" if gene_id != "N/A" else None
-                    st.markdown(
-                        f"""**Candidate Variant ID:** {pick('ID')}  
-                        **Genomic Element Class:** {pick('class')}  
-                        **Organism:** {'Human'}  
-                        **Genome Assembly:** {'GRCh38'}  
-                        **Element coordinate:** {pick('element_coordinates')}  
-                        **Closest Gene:** {'[{}]({})'.format(gene_id, ensembl_link) if ensembl_link else 'N/A'}  
-                        **Strand:** {pick('strand')}  
-                        **Distance to element:** {pick('distance')}  
-                        """,
-                        unsafe_allow_html=True,
-                    )
-                    
-                with st.expander("📃 Variant prediction information", expanded=True):
-                    rs_id = pick('dbsnp_id')
-                    dbsnp_link = f"https://www.ncbi.nlm.nih.gov/snp/{rs_id}" if rs_id != "N/A" else None
-                    st.markdown(
-                        f"""**Reference SNP (rs) ID:** {'[{}]({})'.format(rs_id, dbsnp_link) if dbsnp_link else 'N/A'}  
-                        **Variant Coordinate:** {pick('variant_coordinates')}  
-                        **Reference allele:** {pick('reference_nucleotide')}  
-                        **Alternative allele:** {pick('alternative_nucleotide')}  
-                        **Reference probability:** {pick('reference_probability')}  
-                        **Alternative probability:** {pick('alternative_probability')}  
-                        **ScoreChange:** {pick('ScoreChange')}  
-                        **LogOddRatio:** {pick('LogOddRatio')}  
-                        """,
-                        unsafe_allow_html=True,
-                    )
+        def pick(*keys):
+            for key in keys:
+                if key in rowd and pd.notna(rowd[key]):
+                    return rowd[key]
+            return "N/A"
+
+        gene_id = pick('gene', 'Closest gene', 'gene_id')
+        ensembl_link = f"https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={gene_id}" if gene_id != "N/A" else None
+        rs_id = pick('dbsnp_id')
+        dbsnp_link = f"https://www.ncbi.nlm.nih.gov/snp/{rs_id}" if rs_id != "N/A" else None
+
+        # --- Custom card layout ---
+        st.markdown("""
+        <style>
+        .info-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .info-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 40px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #374151;
+        }
+        .info-value {
+            color: #111827;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+        # --- Basic Information Card ---
+        st.markdown("""
+        <div class="info-card">
+            <div class="info-title">🪪 Basic Information</div>
+            <div class="info-grid">
+                <div class="info-label">Candidate Variant ID</div><div class="info-value">{id}</div>
+                <div class="info-label">Genomic Element Class</div><div class="info-value">{cls}</div>
+                <div class="info-label">Organism</div><div class="info-value">Human</div>
+                <div class="info-label">Genome Assembly</div><div class="info-value">GRCh38</div>
+                <div class="info-label">Element Coordinate</div><div class="info-value">{coord}</div>
+                <div class="info-label">Closest Gene</div><div class="info-value"><a href="{ens}" target="_blank">{gene}</a></div>
+                <div class="info-label">Strand</div><div class="info-value">{strand}</div>
+                <div class="info-label">Distance to Element</div><div class="info-value">{dist}</div>
+            </div>
+        </div>
+        """.format(
+            id=pick('ID'),
+            cls=pick('class'),
+            coord=pick('element_coordinates'),
+            gene=gene_id,
+            ens=ensembl_link,
+            strand=pick('strand'),
+            dist=pick('distance')
+        ), unsafe_allow_html=True)
+
+        # --- Variant Prediction Card ---
+        st.markdown("""
+        <div class="info-card">
+            <div class="info-title">📊 Variant Prediction Information</div>
+            <div class="info-grid">
+                <div class="info-label">Reference SNP (rs) ID</div><div class="info-value"><a href="{dbsnp}" target="_blank">{rs}</a></div>
+                <div class="info-label">Variant Coordinate</div><div class="info-value">{varcoord}</div>
+                <div class="info-label">Reference Allele</div><div class="info-value">{ref}</div>
+                <div class="info-label">Alternative Allele</div><div class="info-value">{alt}</div>
+                <div class="info-label">Reference Probability</div><div class="info-value">{refprob}</div>
+                <div class="info-label">Alternative Probability</div><div class="info-value">{altprob}</div>
+                <div class="info-label">Score Change</div><div class="info-value">{sc}</div>
+                <div class="info-label">Log Odds Ratio</div><div class="info-value">{lor}</div>
+            </div>
+        </div>
+        """.format(
+            dbsnp=dbsnp_link,
+            rs=rs_id,
+            varcoord=pick('variant_coordinates'),
+            ref=pick('reference_nucleotide'),
+            alt=pick('alternative_nucleotide'),
+            refprob=pick('reference_probability'),
+            altprob=pick('alternative_probability'),
+            sc=pick('ScoreChange'),
+            lor=pick('LodOddsRatio')
+        ), unsafe_allow_html=True)
 
     with tab2:
         # Load and combine all split files
