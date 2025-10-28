@@ -399,102 +399,103 @@ if page == "📊 Browse Data":
             unsafe_allow_html=True,
         )
 
-        row = detailed_info.iloc[0]
-        rowd = row.to_dict()
+        if not detailed_info.empty:
+            row = detailed_info.iloc[0]
+            rowd = row.to_dict()
 
-        def pick(*keys):
-            for key in keys:
-                if key in rowd and pd.notna(rowd[key]):
-                    return rowd[key]
-            return "N/A"
+            def pick(*keys):
+                for key in keys:
+                    if key in rowd and pd.notna(rowd[key]):
+                        return rowd[key]
+                return "N/A"
 
-        gene_id = pick('gene', 'Closest gene', 'gene_id')
-        ensembl_link = f"https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={gene_id}" if gene_id != "N/A" else None
-        rs_id = pick('dbsnp_id')
-        dbsnp_link = f"https://www.ncbi.nlm.nih.gov/snp/{rs_id}" if rs_id != "N/A" else None
+            gene_id = pick('gene', 'Closest gene', 'gene_id')
+            ensembl_link = f"https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={gene_id}" if gene_id != "N/A" else None
+            rs_id = pick('dbsnp_id')
+            dbsnp_link = f"https://www.ncbi.nlm.nih.gov/snp/{rs_id}" if rs_id != "N/A" else None
 
-        # --- Custom card layout ---
-        st.markdown("""
-        <style>
-        .info-card {
-            background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .info-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 10px;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px 40px;
-        }
-        .info-label {
-            font-weight: 600;
-            color: #374151;
-        }
-        .info-value {
-            color: #111827;
-        }
-        </style>
-        """, unsafe_allow_html=True)
+            # --- Custom card layout ---
+            st.markdown("""
+            <style>
+            .info-card {
+                background-color: #ffffff;
+                border-radius: 15px;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            .info-title {
+                font-size: 18px;
+                font-weight: 600;
+                color: #1f2937;
+                margin-bottom: 10px;
+            }
+            .info-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px 40px;
+            }
+            .info-label {
+                font-weight: 600;
+                color: #374151;
+            }
+            .info-value {
+                color: #111827;
+            }
+            </style>
+            """, unsafe_allow_html=True)
 
-        # --- Basic Information Card ---
-        st.markdown("""
-        <div class="info-card">
-            <div class="info-title">🪪 Basic Information</div>
-            <div class="info-grid">
-                <div class="info-label">Candidate Variant ID</div><div class="info-value">{id}</div>
-                <div class="info-label">Genomic Element Class</div><div class="info-value">{cls}</div>
-                <div class="info-label">Organism</div><div class="info-value">Human</div>
-                <div class="info-label">Genome Assembly</div><div class="info-value">GRCh38</div>
-                <div class="info-label">Element Coordinate</div><div class="info-value">{coord}</div>
-                <div class="info-label">Closest Gene</div><div class="info-value"><a href="{ens}" target="_blank">{gene}</a></div>
-                <div class="info-label">Strand</div><div class="info-value">{strand}</div>
-                <div class="info-label">Distance to Element</div><div class="info-value">{dist}</div>
+            # --- Basic Information Card ---
+            st.markdown("""
+            <div class="info-card">
+                <div class="info-title">🪪 Basic Information</div>
+                <div class="info-grid">
+                    <div class="info-label">Candidate Variant ID</div><div class="info-value">{id}</div>
+                    <div class="info-label">Genomic Element Class</div><div class="info-value">{cls}</div>
+                    <div class="info-label">Organism</div><div class="info-value">Human</div>
+                    <div class="info-label">Genome Assembly</div><div class="info-value">GRCh38</div>
+                    <div class="info-label">Element Coordinate</div><div class="info-value">{coord}</div>
+                    <div class="info-label">Closest Gene</div><div class="info-value"><a href="{ens}" target="_blank">{gene}</a></div>
+                    <div class="info-label">Strand</div><div class="info-value">{strand}</div>
+                    <div class="info-label">Distance to Element</div><div class="info-value">{dist}</div>
+                </div>
             </div>
-        </div>
-        """.format(
-            id=pick('ID'),
-            cls=pick('class'),
-            coord=pick('element_coordinates'),
-            gene=gene_id,
-            ens=ensembl_link,
-            strand=pick('strand'),
-            dist=pick('distance')
-        ), unsafe_allow_html=True)
+            """.format(
+                id=pick('ID'),
+                cls=pick('class'),
+                coord=pick('element_coordinates'),
+                gene=gene_id,
+                ens=ensembl_link,
+                strand=pick('strand'),
+                dist=pick('distance')
+            ), unsafe_allow_html=True)
 
-        # --- Variant Prediction Card ---
-        st.markdown("""
-        <div class="info-card">
-            <div class="info-title">📊 Variant Prediction Information</div>
-            <div class="info-grid">
-                <div class="info-label">Reference SNP (rs) ID</div><div class="info-value"><a href="{dbsnp}" target="_blank">{rs}</a></div>
-                <div class="info-label">Variant Coordinate</div><div class="info-value">{varcoord}</div>
-                <div class="info-label">Reference Allele</div><div class="info-value">{ref}</div>
-                <div class="info-label">Alternative Allele</div><div class="info-value">{alt}</div>
-                <div class="info-label">Reference Probability</div><div class="info-value">{refprob}</div>
-                <div class="info-label">Alternative Probability</div><div class="info-value">{altprob}</div>
-                <div class="info-label">Score Change</div><div class="info-value">{sc}</div>
-                <div class="info-label">Log Odds Ratio</div><div class="info-value">{lor}</div>
+            # --- Variant Prediction Card ---
+            st.markdown("""
+            <div class="info-card">
+                <div class="info-title">📊 Variant Prediction Information</div>
+                <div class="info-grid">
+                    <div class="info-label">Reference SNP (rs) ID</div><div class="info-value"><a href="{dbsnp}" target="_blank">{rs}</a></div>
+                    <div class="info-label">Variant Coordinate</div><div class="info-value">{varcoord}</div>
+                    <div class="info-label">Reference Allele</div><div class="info-value">{ref}</div>
+                    <div class="info-label">Alternative Allele</div><div class="info-value">{alt}</div>
+                    <div class="info-label">Reference Probability</div><div class="info-value">{refprob}</div>
+                    <div class="info-label">Alternative Probability</div><div class="info-value">{altprob}</div>
+                    <div class="info-label">Score Change</div><div class="info-value">{sc}</div>
+                    <div class="info-label">Log Odds Ratio</div><div class="info-value">{lor}</div>
+                </div>
             </div>
-        </div>
-        """.format(
-            dbsnp=dbsnp_link,
-            rs=rs_id,
-            varcoord=pick('variant_coordinates'),
-            ref=pick('reference_nucleotide'),
-            alt=pick('alternative_nucleotide'),
-            refprob=pick('reference_probability'),
-            altprob=pick('alternative_probability'),
-            sc=pick('ScoreChange'),
-            lor=pick('LodOddsRatio')
-        ), unsafe_allow_html=True)
+            """.format(
+                dbsnp=dbsnp_link,
+                rs=rs_id,
+                varcoord=pick('variant_coordinates'),
+                ref=pick('reference_nucleotide'),
+                alt=pick('alternative_nucleotide'),
+                refprob=pick('reference_probability'),
+                altprob=pick('alternative_probability'),
+                sc=pick('ScoreChange'),
+                lor=pick('LodOddsRatio')
+            ), unsafe_allow_html=True)
 
     with tab2:
         # Load and combine all split files
