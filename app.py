@@ -179,7 +179,7 @@ if page == "📊 Browse Data":
             )
 
             selected_class = st.selectbox(
-                "Variant Class",
+                "Element Class",
                 class_options,
                 key=f"variant_class_{st.session_state.filter_key}"
             )
@@ -690,11 +690,10 @@ else:  # About page
     <div style="text-align: justify;">
         <h5>Features:</h5>
         <ul>
-            <li>Advanced filtering by chromosome, position, and score change</li>
-            <li>Clinical significance filtering</li>
-            <li>External database links (GWAS, ClinVar, eQTL)</li>
+            <li>Genome-wide enhancer predictions from DNABERT-Enhancer-350</li>
+            <li>Candidate GOF/LOF variants predicted by DNABERT-Enhancer-350</li>
+            <li>Interactive exploration by predicted effect, element class, chromosome, and more</li>
             <li>Transcription factor analysis</li>
-            <li>Comparative visualizations</li>
             <li>Downloadable filtered results</li>
         </ul>
     </div>
