@@ -398,6 +398,7 @@ if page == "📊 Browse Data":
             selected_variant_id = query_params_now["variant"][0] if isinstance(query_params_now["variant"], list) else query_params_now["variant"]
             detailed_info = combined_df[combined_df["ID"] == selected_variant_id]
             if not detailed_info.empty:
+                row = detailed_info.iloc[0].to_dict()
                 st.markdown(f"### 🧬 Detailed information for variant: {selected_variant_id}")
                 
                 with st.expander("🪪 Basic Information", expanded=True):
