@@ -410,6 +410,9 @@ if page == "📊 Browse Data":
                     return default
                 
                 st.markdown(f"### 🧬 Detailed information for variant: {selected_variant_id}")
+
+                gene_id = pick('gene')
+                ensembl_link = f"https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={gene_id}" if gene_id != "N/A" else None
                 
                 with st.expander("🪪 Basic Information", expanded=True):
                     st.markdown(
@@ -418,7 +421,7 @@ if page == "📊 Browse Data":
                         **Organism:** {'Human'}  
                         **Genome Assembly:** {'GRCh38'}  
                         **Element coordinate:** {pick('element_coordinates')}  
-                        **Closest gene:** {pick('gene')}  
+                        **Closest Gene:** {'[{}]({})'.format(gene_id, ensembl_link) if ensembl_link else 'N/A'} 
                         **Strand:** {pick('strand')}  
                         **Distance to element:** {pick('distance')}  
                         """,
