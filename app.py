@@ -427,6 +427,22 @@ if page == "📊 Browse Data":
                         """,
                         unsafe_allow_html=True,
                     )
+                    rs_id = pick('dbsnp_id')
+                    dbsnp_link = f"https://www.ncbi.nlm.nih.gov/snp/{rs_id}" if rs_id != "N/A" else None
+
+                    with st.expander("Variant prediction information", expanded=True):
+                    st.markdown(
+                        f"""**Reference SNP (rs) ID:** {'[{}]({})'.format(rs_id, dbsnp_link) if dbsnp_link else 'N/A'}  
+                        **Variant Coordinate:** {pick('variant_coordinates')}  
+                        **Reference allele:** {pick('reference_nucleotide'}  
+                        **Alternative allele:** {pick('alternative_nucleotide'}  
+                        **Reference probability:** {pick('reference_probability')}  
+                        **Alternative probability:** {pick('alternative_probability')}  
+                        **ScoreChange:** {pick('ScoreChange')}  
+                        **LodOddsRatio:** {pick('LodOddsRatio')}  
+                        """,
+                        unsafe_allow_html=True,
+                    )
 
     with tab2:
         # Load and combine all split files
