@@ -414,7 +414,7 @@ if page == "📊 Browse Data":
                 gene_id = pick('gene')
                 ensembl_link = f"https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={gene_id}" if gene_id != "N/A" else None
                 
-                with st.expander("🪪 Basic Information", expanded=True):
+                with st.expander("📃 Basic Information", expanded=True):
                     st.markdown(
                         f"""**Candidate Variant ID:** {pick('ID')}  
                         **Genomic Element Class:** {pick('class')}  
@@ -430,7 +430,7 @@ if page == "📊 Browse Data":
                     rs_id = pick('dbsnp_id')
                     dbsnp_link = f"https://www.ncbi.nlm.nih.gov/snp/{rs_id}" if rs_id != "N/A" else None
 
-                    with st.expander("Variant prediction information", expanded=True):
+                    with st.expander("📃 Variant prediction information", expanded=True):
                         st.markdown(
                             f"""**Reference SNP (rs) ID:** {'[{}]({})'.format(rs_id, dbsnp_link) if dbsnp_link else 'N/A'}  
                             **Variant Coordinate:** {pick('variant_coordinates')}  
