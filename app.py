@@ -391,14 +391,7 @@ if page == "📊 Browse Data":
         
         # --- Detailed info section (below the table) ---
         st.markdown("---")
-        st.markdown(
-            """
-            <h1 style="font-size:20px; font-weight:bold; color:#1f2937;">
-                Detailed information on candidate variants
-            </h1>
-            """,
-            unsafe_allow_html=True
-        )
+        
         # read query params again (they may have been updated by the JS)
         query_params_now = st.experimental_get_query_params()
         if "variant" in query_params_now:
@@ -406,8 +399,23 @@ if page == "📊 Browse Data":
             detailed_info = combined_df[combined_df["ID"] == selected_variant_id]
             if not detailed_info.empty:
                 st.markdown(f"### 🧬 Detailed information for variant: {selected_variant_id}")
-                st.dataframe(detailed_info.T.rename(columns={0: "Value"}), use_container_width=True)
+                # --- Section 1: Basic information ---
+                with st.expander("🪪 Basic Information", expanded=True):
+                    st.markdown(f"""
+                    **Candidate Variant ID:** {row['ID']}  
+                    **Genomic Element Class:** {row.get('Element_Class', 'N/A')}  
+                    **Organism:** {row.get('Organism', 'Human')}  
+                    **Genome Assembly:** {row.get('Genome_Assembly', 'GRCh38')}
+                    """)
 
+                # --- Section 2: Genomic Context ---
+                with st.expander("📍 Genomic Context"):
+                    st.markdown(f"""
+                    **Element Coordinate:** {row.get('Coordinate', 'N/A')}  
+                    **Closest Gene:** {row.get('Closest_Gene', 'N/A')}  
+                    **Strand:** {row.get('Strand', 'N/A')}  
+                    **Distance:** {row.get('Distance', 'N/A')}
+                    """)
     with tab2:
         # Load and combine all split files
         data_path = "./data/whole_genome_prediction_data/"  # change to the folder where your CSVs are
