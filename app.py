@@ -404,24 +404,13 @@ if page == "📊 Browse Data":
                     st.markdown(
                     f"""
             **Candidate Variant ID:** {row['ID']}  
-            **Genomic Element Class:** {row.get('Element_Class', 'N/A')}  
-            **Organism:** {row.get('Organism', 'Human')}  
-            **Genome Assembly:** {row.get('Genome_Assembly', 'GRCh38')}
+            **Genomic Element Class:** {row.get('class', 'N/A')}  
+            **Organism:** {'Human'}  
+            **Genome Assembly:** {'GRCh38'}
             """,
                 unsafe_allow_html=True,
                 )
 
-            # --- Section 2: Genomic Context ---
-            with st.expander("📍 Genomic Context"):
-                st.markdown(
-                    f"""
-            **Element Coordinate:** {row.get('Coordinate', 'N/A')}  
-            **Closest Gene:** {row.get('Closest_Gene', 'N/A')}  
-            **Strand:** {row.get('Strand', 'N/A')}  
-            **Distance:** {row.get('Distance', 'N/A')}
-            """,
-                    unsafe_allow_html=True,
-                )
     with tab2:
         # Load and combine all split files
         data_path = "./data/whole_genome_prediction_data/"  # change to the folder where your CSVs are
