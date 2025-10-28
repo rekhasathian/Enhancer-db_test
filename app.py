@@ -391,14 +391,7 @@ if page == "📊 Browse Data":
         
         # --- Detailed info section (below the table) ---
         st.markdown("---")
-        st.markdown(
-            """
-            <h3 style='font-size:22px; font-weight:700;'>🧬 Detailed information for variant: {selected_variant_id}
-            </h3>
-            """,
-            unsafe_allow_html=True,
-        )
-
+        
         query_params_now = st.experimental_get_query_params()
         if "variant" in query_params_now:
             selected_variant_id = (
@@ -417,6 +410,14 @@ if page == "📊 Browse Data":
                         if key in rowd and pd.notna(rowd[key]):
                             return rowd[key]
                     return "N/A"
+
+                st.markdown(
+                f"
+                    <h3 style='font-size:22px; font-weight:700;'>🧬 Detailed information for variant: {selected_variant_id}
+                </h3>
+                ",
+                unsafe_allow_html=True,
+                )
 
                 gene_id = pick('gene', 'Closest gene', 'gene_id')
                 ensembl_link = f"https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={gene_id}" if gene_id != "N/A" else None
