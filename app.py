@@ -411,10 +411,9 @@ if page == "📊 Browse Data":
                 
                 st.markdown(f"### 🧬 Detailed information for variant: {selected_variant_id}")
 
-                gene_id = pick('gene')
-                ensembl_link = f"https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={gene_id}" if gene_id != "N/A" else None
-                
                 with st.expander("📃 Basic Information", expanded=True):
+                    gene_id = pick('gene')
+                    ensembl_link = f"https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={gene_id}" if gene_id != "N/A" else None
                     st.markdown(
                         f"""**Candidate Variant ID:** {pick('ID')}  
                         **Genomic Element Class:** {pick('class')}  
@@ -427,10 +426,10 @@ if page == "📊 Browse Data":
                         """,
                         unsafe_allow_html=True,
                     )
-                    rs_id = pick('dbsnp_id')
-                    dbsnp_link = f"https://www.ncbi.nlm.nih.gov/snp/{rs_id}" if rs_id != "N/A" else None
-
+                    
                     with st.expander("📃 Variant prediction information", expanded=True):
+                        rs_id = pick('dbsnp_id')
+                        dbsnp_link = f"https://www.ncbi.nlm.nih.gov/snp/{rs_id}" if rs_id != "N/A" else None
                         st.markdown(
                             f"""**Reference SNP (rs) ID:** {'[{}]({})'.format(rs_id, dbsnp_link) if dbsnp_link else 'N/A'}  
                             **Variant Coordinate:** {pick('variant_coordinates')}  
