@@ -392,7 +392,7 @@ if page == "📊 Browse Data":
         # --- Detailed info section (below the table) ---
         st.markdown("---")
         st.markdown(
-            f"<h3 style='font-size:22px; font-weight:700;'>🧬 Detailed information for variant: {selected_variant_id}</h3>",
+            f"""<h3 style='font-size:22px; font-weight:700;'>🧬 Detailed information for variant: {selected_variant_id}</h3>""",
             unsafe_allow_html=True,
         )
 
