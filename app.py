@@ -399,18 +399,26 @@ if page == "📊 Browse Data":
             detailed_info = combined_df[combined_df["ID"] == selected_variant_id]
             if not detailed_info.empty:
                 row = detailed_info.iloc[0].to_dict()
+                rowd = row.to_dict()
+
+                # helper to try multiple possible column name variants
+                def pick(*keys, default="N/A"):
+                    for k in keys:
+                        if k in rowd and pd.notna(rowd[k]):
+                            return rowd[k]
+                    return default
+                
                 st.markdown(f"### 🧬 Detailed information for variant: {selected_variant_id}")
                 
                 with st.expander("🪪 Basic Information", expanded=True):
                     st.markdown(
-                    f"""
-                    **Candidate Variant ID:** {row.get['ID']}  
-                    **Genomic Element Class:** {row.get('class', 'N/A')}  
-                    **Organism:** {'Human'}  
-                    **Genome Assembly:** {'GRCh38'}
-                    """,
-                    unsafe_allow_html=True,
-                )
+                        f"""**Candidate Variant ID:** {pick('ID')}  
+        **Genomic Element Class:** {pick('Class')}  
+        **Organism:** {'Human'}  
+        **Genome Assembly:** {'GRCh38'}  
+        """,
+                        unsafe_allow_html=True,
+                    )
 
     with tab2:
         # Load and combine all split files
