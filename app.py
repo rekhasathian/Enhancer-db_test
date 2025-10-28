@@ -498,7 +498,7 @@ if page == "📊 Browse Data":
                     refprob=pick('reference_probability'),
                     altprob=pick('alternative_probability'),
                     sc=pick('ScoreChange'),
-                    lor=pick('LodOddsRatio')
+                    lor=pick('LogOddRatio')
                 ), unsafe_allow_html=True)
 
     with tab2:
