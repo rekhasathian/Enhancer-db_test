@@ -411,13 +411,7 @@ if page == "📊 Browse Data":
                             return rowd[key]
                     return "N/A"
 
-                st.markdown(
-                f"
-                    <h3 style='font-size:22px; font-weight:700;'>🧬 Detailed information for variant: {selected_variant_id}
-                </h3>
-                ",
-                unsafe_allow_html=True,
-                )
+                t.markdown(f"### 🧬 Detailed information for variant: `{selected_variant_id}`")
 
                 gene_id = pick('gene', 'Closest gene', 'gene_id')
                 ensembl_link = f"https://www.ensembl.org/Homo_sapiens/Gene/Summary?g={gene_id}" if gene_id != "N/A" else None
