@@ -401,7 +401,7 @@ if page == "📊 Browse Data":
                 st.markdown(f"### 🧬 Detailed information for variant: {selected_variant_id}")
                 
                 with st.expander("🪪 Basic Information", expanded=True):
-                st.markdown(
+                    st.markdown(
                     f"""
             **Candidate Variant ID:** {row['ID']}  
             **Genomic Element Class:** {row.get('Element_Class', 'N/A')}  
