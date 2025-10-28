@@ -421,7 +421,7 @@ if page == "📊 Browse Data":
                         **Organism:** {'Human'}  
                         **Genome Assembly:** {'GRCh38'}  
                         **Element coordinate:** {pick('element_coordinates')}  
-                        **Closest Gene:** {'[{}]({})'.format(gene_id, ensembl_link) if ensembl_link else 'N/A'} 
+                        **Closest Gene:** {'[{}]({})'.format(gene_id, ensembl_link) if ensembl_link else 'N/A'}  
                         **Strand:** {pick('strand')}  
                         **Distance to element:** {pick('distance')}  
                         """,
