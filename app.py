@@ -503,10 +503,10 @@ if page == "📊 Browse Data":
 
                 st.markdown("### 🧬 Reported Clinical Significance")
 
-                reported = variant_data.get("reported_clinical_significance", None)
-                clinvar_url = variant_data.get("clinvar_url", None)
-                gwas_url = variant_data.get("gwas_url", None)
-                eqtl_url = variant_data.get("eqtl_url", None)
+                reported = rowd.get("reported_clinical_significance", None)
+                clinvar_url = rowd.get("clinvar_url", None)
+                gwas_url = rowd.get("gwas_url", None)
+                eqtl_url = rowd.get("eqtl_url", None)
 
                 # Handle NaN or empty values
                 if pd.isna(reported) or str(reported).strip().lower() not in ["yes", "true"]:
