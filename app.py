@@ -573,6 +573,72 @@ if page == "📊 Browse Data":
                         """,
                         unsafe_allow_html=True
                     )
+                # --- Transcription Factor Binding Impact (for LOF variants only) ---
+                pred_effect = str(rowd.get("predicted_functional_effect", "")).strip().lower()
+
+                if "lof" in pred_effect:  # show only for LOF variants
+                    # Filter all TF rows for this variant
+                    tf_rows = combined_df[combined_df["ID"] == selected_variant_id][[
+                        "transcription_factor",
+                        "tf_reference_probability",
+                        "tf_alternative_probability",
+                        "tf_ScoreChange",
+                        "tf_LogOddRatio"
+                    ]].dropna(subset=["transcription_factor"], how="all")
+
+                    if not tf_rows.empty:
+                        # Card header
+                        st.markdown("""
+                        <div class="info-card">
+                            <div class="info-title">🧫 Transcription Factor Binding Impact</div>
+                            <p style="font-size:14px; color:#555; margin-bottom:10px;">
+                            The following transcription factors show altered binding probability for this LOF variant:
+                            </p>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                        # Rename columns for display
+                        tf_rows_display = tf_rows.rename(columns={
+                            "transcription_factor": "Transcription Factor",
+                            "tf_reference_probability": "Reference Probability",
+                            "tf_alternative_probability": "Alternative Probability",
+                            "tf_ScoreChange": "Score Change",
+                            "tf_LogOddRatio": "Log Odds Ratio"
+                        })
+
+                        # Optional: clean numeric formatting
+                        for col in ["Reference Probability", "Alternative Probability", "Score Change", "Log Odds Ratio"]:
+                            if col in tf_rows_display.columns:
+                                tf_rows_display[col] = tf_rows_display[col].apply(
+                                    lambda x: f"{x:.3f}" if isinstance(x, (float, int)) else x
+                                )
+
+                        # Display compact, scrollable table
+                        st.dataframe(
+                            tf_rows_display.style.set_table_styles([
+                                {'selector': 'thead th', 'props': [('background-color', '#f0f8ff'), ('font-weight', '600')]},
+                                {'selector': 'tbody td', 'props': [('font-size', '13px')]}
+                            ]),
+                            use_container_width=True,
+                            height=min(300, 40 + len(tf_rows_display) * 30)
+                        )
+
+                    else:
+                        st.markdown(
+                            """
+                            <div style="
+                                background-color:#fafafa;
+                                border:1px solid #ddd;
+                                border-radius:12px;
+                                padding:12px 16px;
+                                color:#666;
+                                font-size:14px;
+                            ">
+                                ⚪ No transcription factor impact data available for this LOF variant.
+                            </div>
+                            """,
+                            unsafe_allow_html=True
+                        )
 
 
     with tab2:
