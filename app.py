@@ -506,32 +506,54 @@ if page == "📊 Browse Data":
                 reported_raw = rowd.get("reported_clinical_association", None)
                 reported = str(reported_raw).strip().lower() if reported_raw is not None and not pd.isna(reported_raw) else "no"
                 # st.write(f"Reported raw value: '{reported_raw}'")
+                
+                clinvar_url = rowd.get("clinvar_url", None)
+                gwas_url = rowd.get("gwas_url", None)
+                eqtl_url = rowd.get("eqtl_url", None)
+                
                 if reported_raw == "yes":
                     st.markdown("**This variant has reported clinical significance.**")
 
                     links = []
-                    if rowd.get("clinvar_url") and not pd.isna(rowd.get("clinvar_url")):
-                        links.append(f'<a href="{rowd["clinvar_url"]}" target="_blank" style="text-decoration:none;">🧫 <b>ClinVar</b></a>')
-                    if rowd.get("gwas_url") and not pd.isna(rowd.get("gwas_url")):
-                        links.append(f'<a href="{rowd["gwas_url"]}" target="_blank" style="text-decoration:none;">📊 <b>GWAS Catalog</b></a>')
-                    if rowd.get("eqtl_url") and not pd.isna(rowd.get("eqtl_url")):
-                        links.append(f'<a href="{rowd["eqtl_url"]}" target="_blank" style="text-decoration:none;">🧠 <b>GTEx eQTL</b></a>')
+                    if clinvar_url and str(clinvar_url).strip() not in ["-", "nan", "", "None"]:
+                        links.append(f'<a href="{clinvar_url}" target="_blank" style="text-decoration:none;">🧫 <b>ClinVar</b></a>')
+                    if gwas_url and str(gwas_url).strip() not in ["-", "nan", "", "None"]:
+                        links.append(f'<a href="{gwas_url}" target="_blank" style="text-decoration:none;">📊 <b>GWAS Catalog</b></a>')
+                    if eqtl_url and str(eqtl_url).strip() not in ["-", "nan", "", "None"]:
+                        links.append(f'<a href="{eqtl_url}" target="_blank" style="text-decoration:none;">🧠 <b>GTEx eQTL</b></a>')
 
-                    links_html = " &nbsp; | &nbsp; ".join(links) if links else "No external link available."
+                    if links:
+                        links_html = " &nbsp; | &nbsp; ".join(links)
 
-                    st.markdown(
-                        f"""
-                        <div style="
-                            background-color:#f0f8ff;
-                            border: 1px solid #b3d4fc;
-                            border-radius: 12px;
-                            padding: 12px 16px;
-                            margin-top: 6px;
-                            font-size: 14px;
-                        ">
-                            🔗 {links_html}
-                        </div>
-                        """,
+                        st.markdown(
+                            f"""
+                            <div style="
+                                background-color:#f0f8ff;
+                                border: 1px solid #b3d4fc;
+                                border-radius: 12px;
+                                padding: 12px 16px;
+                                margin-top: 6px;
+                                font-size: 14px;
+                            ">
+                                🔗 {links_html}
+                            </div>
+                            """,
+                            unsafe_allow_html=True
+                        )
+                    else:
+                        st.markdown(
+                            """
+                            <div style="
+                                background-color:#fff8e1;
+                                border: 1px solid #f5d742;
+                                border-radius: 12px;
+                                padding: 12px 16px;
+                                color:#555;
+                                font-size:14px;
+                            ">
+                                ⚠️ Marked as reported, but no external database links provided.
+                            </div>
+                            """,
                         unsafe_allow_html=True
                     )
 
