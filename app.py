@@ -501,24 +501,41 @@ if page == "📊 Browse Data":
                     lor=pick('LogOddRatio')
                 ), unsafe_allow_html=True)
 
-                # Inside your existing expander
-
                 st.markdown("### 🧬 Reported Clinical Significance")
 
-                reported = variant_data.get("reported_clinical_significance", "No")
+                reported = variant_data.get("reported_clinical_significance", None)
                 clinvar_url = variant_data.get("clinvar_url", None)
                 gwas_url = variant_data.get("gwas_url", None)
                 eqtl_url = variant_data.get("eqtl_url", None)
 
-                if reported.lower() == "yes":
+                # Handle NaN or empty values
+                if pd.isna(reported) or str(reported).strip().lower() not in ["yes", "true"]:
+                    st.markdown(
+                        """
+                        <div style="
+                            background-color:#fafafa;
+                            border:1px solid #ddd;
+                            border-radius:12px;
+                            padding:12px 16px;
+                            color:#666;
+                            font-size:14px;
+                        ">
+                            ⚪ No reported clinical significance found.
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+                else:
                     st.markdown("**This variant has reported clinical significance.**")
 
+                    # Collect valid links
                     links = []
-                    if clinvar_url and clinvar_url != "N/A":
+                    if clinvar_url and not pd.isna(clinvar_url):
                         links.append(f'<a href="{clinvar_url}" target="_blank" style="text-decoration:none;">🧫 <b>ClinVar</b></a>')
-                    if gwas_url and gwas_url != "N/A":
+                    if gwas_url and not pd.isna(gwas_url):
                         links.append(f'<a href="{gwas_url}" target="_blank" style="text-decoration:none;">📊 <b>GWAS Catalog</b></a>')
-                    if eqtl_url and eqtl_url != "N/A":
+                    if eqtl_url and not pd.isna(eqtl_url):
                         links.append(f'<a href="{eqtl_url}" target="_blank" style="text-decoration:none;">🧠 <b>GTEx eQTL</b></a>')
 
                     links_html = " &nbsp; | &nbsp; ".join(links) if links else "No external link available."
@@ -533,24 +550,7 @@ if page == "📊 Browse Data":
                             margin-top: 6px;
                             font-size: 14px;
                         ">
-                        🔗 {links_html}
-                        </div>
-                        """,
-                        unsafe_allow_html=True
-                    )
-
-                else:
-                    st.markdown(
-                        """
-                        <div style="
-                            background-color:#fafafa;
-                            border:1px solid #ddd;
-                            border-radius:12px;
-                            padding:12px 16px;
-                            color:#666;
-                            font-size:14px;
-                        ">
-                            ⚪ No reported clinical significance found.
+                            🔗 {links_html}
                         </div>
                         """,
                         unsafe_allow_html=True
