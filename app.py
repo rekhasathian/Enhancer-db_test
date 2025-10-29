@@ -504,8 +504,8 @@ if page == "📊 Browse Data":
                 st.markdown("### 🧬 Reported Clinical Significance")
 
                 reported_raw = rowd.get("reported_clinical_significance", None)
-                # reported = str(reported_raw).strip().lower() if reported_raw is not None and not pd.isna(reported_raw) else "no"
-
+                reported = str(reported_raw).strip().lower() if reported_raw is not None and not pd.isna(reported_raw) else "no"
+                st.write(f"Reported raw value: '{reported_raw}'")
                 if reported_raw == "yes":
                     st.markdown("**This variant has reported clinical significance.**")
 
