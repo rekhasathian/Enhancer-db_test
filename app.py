@@ -509,7 +509,7 @@ if page == "📊 Browse Data":
                 eqtl_url = rowd.get("eqtl_url", None)
 
                 # Handle NaN or empty values
-                if pd.isna(reported) or str(reported).strip().lower() not in ["yes", "true"]:
+                if str(reported).strip().lower() not in ["yes"]:
                     st.markdown(
                         """
                         <div style="
