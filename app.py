@@ -613,6 +613,7 @@ if page == "📊 Browse Data":
                                 {'selector': 'tbody td', 'props': [('font-size', '13px')]}
                             ]),
                             use_container_width=True,
+                            hide_index=True,
                             height=min(300, 40 + len(tf_rows_display) * 30)
                         )
 
