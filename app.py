@@ -501,7 +501,7 @@ if page == "📊 Browse Data":
                     lor=pick('LogOddRatio')
                 ), unsafe_allow_html=True)
 
-                st.markdown("### 🧬 Reported Clinical Significance")
+                st.markdown("##### 🧬 Reported Clinical Significance")
 
                 reported_raw = rowd.get("reported_clinical_association", None)
                 reported = str(reported_raw).strip().lower() if reported_raw is not None and not pd.isna(reported_raw) else "no"
