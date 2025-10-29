@@ -576,7 +576,7 @@ if page == "📊 Browse Data":
                 # --- Transcription Factor Binding Impact (for LOF variants only) ---
                 pred_effect = str(rowd.get("predicted_functional_effect", "")).strip().lower()
                 st.write(f"predicted functional effect: '{pred_effect}'")
-                if "Loss of function" in pred_effect:  # show only for LOF variants
+                if "loss of function" in pred_effect:  # show only for LOF variants
                     # Filter all TF rows for this variant
                     tf_rows = combined_df[combined_df["ID"] == selected_variant_id][[
                         "transcription_factor",
