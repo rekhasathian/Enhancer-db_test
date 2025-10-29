@@ -452,7 +452,7 @@ if page == "📊 Browse Data":
                 # --- Basic Information Card ---
                 st.markdown("""
                 <div class="info-card">
-                    <div class="info-title">🪪 Basic Information</div>
+                    <div class="info-title"> Basic Information</div>
                     <div class="info-grid">
                         <div class="info-label">Candidate Variant ID</div><div class="info-value">{id}</div>
                         <div class="info-label">Genomic Element Class</div><div class="info-value">{cls}</div>
@@ -477,7 +477,7 @@ if page == "📊 Browse Data":
                 # --- Variant Prediction Card ---
                 st.markdown("""
                 <div class="info-card">
-                    <div class="info-title">📊 Variant Prediction Information</div>
+                    <div class="info-title"> Variant Prediction Information</div>
                     <div class="info-grid">
                         <div class="info-label">Reference SNP (rs) ID</div><div class="info-value"><a href="{dbsnp}" target="_blank">{rs}</a></div>
                         <div class="info-label">Variant Coordinate</div><div class="info-value">{varcoord}</div>
@@ -501,7 +501,7 @@ if page == "📊 Browse Data":
                     lor=pick('LogOddRatio')
                 ), unsafe_allow_html=True)
 
-                st.markdown("##### 🧬 Reported Clinical Significance")
+                st.markdown("##### Reported Clinical Significance")
 
                 reported_raw = rowd.get("reported_clinical_association", None)
                 reported = str(reported_raw).strip().lower() if reported_raw is not None and not pd.isna(reported_raw) else "no"
@@ -575,7 +575,7 @@ if page == "📊 Browse Data":
                     )
                 # --- Transcription Factor Binding Impact (for LOF variants only) ---
                 pred_effect = str(rowd.get("predicted_functional_effect", "")).strip().lower()
-                st.write(f"predicted functional effect: '{pred_effect}'")
+                # st.write(f"predicted functional effect: '{pred_effect}'")
                 if "loss of function" in pred_effect:  # show only for LOF variants
                     # Filter all TF rows for this variant
                     tf_rows = combined_df[combined_df["ID"] == selected_variant_id][[
@@ -588,14 +588,7 @@ if page == "📊 Browse Data":
 
                     if not tf_rows.empty:
                         # Card header
-                        st.markdown("""
-                        <div class="info-card">
-                            <div class="info-title">🧫 Transcription Factor Binding Impact</div>
-                            <p style="font-size:14px; color:#555; margin-bottom:10px;">
-                            The following transcription factors show altered binding probability for this LOF variant:
-                            </p>
-                        </div>
-                        """, unsafe_allow_html=True)
+                        st.markdown("##### Transcription Factor Binding impact")
 
                         # Rename columns for display
                         tf_rows_display = tf_rows.rename(columns={
@@ -610,7 +603,7 @@ if page == "📊 Browse Data":
                         for col in ["Reference Probability", "Alternative Probability", "Score Change", "Log Odds Ratio"]:
                             if col in tf_rows_display.columns:
                                 tf_rows_display[col] = tf_rows_display[col].apply(
-                                    lambda x: f"{x:.3f}" if isinstance(x, (float, int)) else x
+                                    lambda x: f"{x:.4f}" if isinstance(x, (float, int)) else x
                                 )
 
                         # Display compact, scrollable table
