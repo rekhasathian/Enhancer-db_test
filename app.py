@@ -501,6 +501,62 @@ if page == "📊 Browse Data":
                     lor=pick('LogOddRatio')
                 ), unsafe_allow_html=True)
 
+                # Inside your existing expander
+
+                st.markdown("### 🧬 Reported Clinical Significance")
+
+                reported = variant_data.get("reported_clinical_significance", "No")
+                clinvar_url = variant_data.get("clinvar_url", None)
+                gwas_url = variant_data.get("gwas_url", None)
+                eqtl_url = variant_data.get("eqtl_url", None)
+
+                if reported.lower() == "yes":
+                    st.markdown("**This variant has reported clinical significance.**")
+
+                    links = []
+                    if clinvar_url and clinvar_url != "N/A":
+                        links.append(f'<a href="{clinvar_url}" target="_blank" style="text-decoration:none;">🧫 <b>ClinVar</b></a>')
+                    if gwas_url and gwas_url != "N/A":
+                        links.append(f'<a href="{gwas_url}" target="_blank" style="text-decoration:none;">📊 <b>GWAS Catalog</b></a>')
+                    if eqtl_url and eqtl_url != "N/A":
+                        links.append(f'<a href="{eqtl_url}" target="_blank" style="text-decoration:none;">🧠 <b>GTEx eQTL</b></a>')
+
+                    links_html = " &nbsp; | &nbsp; ".join(links) if links else "No external link available."
+
+                    st.markdown(
+                        f"""
+                        <div style="
+                            background-color:#f0f8ff;
+                            border: 1px solid #b3d4fc;
+                            border-radius: 12px;
+                            padding: 12px 16px;
+                            margin-top: 6px;
+                            font-size: 14px;
+                        ">
+                        🔗 {links_html}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+                else:
+                    st.markdown(
+                        """
+                        <div style="
+                            background-color:#fafafa;
+                            border:1px solid #ddd;
+                            border-radius:12px;
+                            padding:12px 16px;
+                            color:#666;
+                            font-size:14px;
+                        ">
+                            ⚪ No reported clinical significance found.
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+
     with tab2:
         # Load and combine all split files
         data_path = "./data/whole_genome_prediction_data/"  # change to the folder where your CSVs are
