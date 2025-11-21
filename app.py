@@ -308,7 +308,7 @@ if page == "📊 Browse Data":
                 )
 
             # --- Optimize table display for speed ---
-            max_rows = 50  # number of rows to display (you can make it a user option too)
+            max_rows = 15  # number of rows to display (you can make it a user option too)
 
             # Apply all filters/search as before
             # filtered_display_df = <your existing filtered dataframe>
