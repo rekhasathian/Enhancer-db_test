@@ -689,7 +689,7 @@ if page == "📊 Browse Data":
                 st.rerun()
 
         with col2:
-            st.dataframe(filtered_df.head(10), use_container_width=True, height=500, hide_index=True)
+            st.dataframe(filtered_df.head(15), use_container_width=True, height=500, hide_index=True)
 
             # Download option
             csv = filtered_df.to_csv(index=False).encode('utf-8')
