@@ -689,17 +689,18 @@ if page == "📊 Browse Data":
                 st.rerun()
 
         with col2:
-            st.dataframe(filtered_df.head(50), use_container_width=True, height=500, hide_index=True)
+            st.dataframe(filtered_df.head(10), use_container_width=True, height=500, hide_index=True)
 
             # Download option
             csv = filtered_df.to_csv(index=False).encode('utf-8')
-            st.download_button(
-                label="📥 Download Filtered Enhancers (CSV)",
-                data=csv,
-                file_name="filtered_enhancer_regions.csv",
-                mime="text/csv"
-            )
-        
+            # st.download_button(
+            #     label="📥 Download Filtered Enhancers (CSV)",
+            #     data=csv,
+            #     file_name="filtered_enhancer_regions.csv",
+            #     mime="text/csv"
+            # )
+            if st.button("Download Data"):
+                st.info("Data will be available for download after the article is published.")
 else:  # About page
     st.title("About DNABERT-Enhancer portal")
     st.markdown("""
