@@ -385,12 +385,18 @@ if page == "📊 Browse Data":
 
             # --- Download option ---
             csv = filtered_display_df.to_csv(index=False).encode('utf-8')
+            # st.download_button(
+            #     label="📥 Download Filtered Variants (CSV)",
+            #     data=csv,
+            #     file_name="filtered_candidate_variants.csv",
+            #     mime="text/csv"
+            # )
             st.download_button(
-                label="📥 Download Filtered Variants (CSV)",
-                data=csv,
-                file_name="filtered_candidate_variants.csv",
-                mime="text/csv"
+                label="Download Data (coming soon)",
+                data=None,
+                disabled=True,   # Streamlit supports disabled=True
             )
+            st.caption("Data will be available for download after the article is published.")
         
         # --- Detailed info section (below the table) ---
         st.markdown("---")
