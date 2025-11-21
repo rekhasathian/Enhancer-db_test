@@ -391,7 +391,7 @@ if page == "📊 Browse Data":
             #     file_name="filtered_candidate_variants.csv",
             #     mime="text/csv"
             # )
-            if st.download_button("Download Data"):
+            if st.download_button("Download Data", key="download_tab1"):
                 st.info("Data will be available for download after the article is published.")
         
         # --- Detailed info section (below the table) ---
@@ -699,7 +699,7 @@ if page == "📊 Browse Data":
             #     file_name="filtered_enhancer_regions.csv",
             #     mime="text/csv"
             # )
-            if st.download_button("Download Data"):
+            if st.download_button("Download Data", key="download_tab2"):
                 st.info("Data will be available for download after the article is published.")
 else:  # About page
     st.title("About DNABERT-Enhancer portal")
